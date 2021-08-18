@@ -14,14 +14,22 @@ class CreateUserPathTable extends Migration
     public function up()
     {
         Schema::create('user_path', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('path_id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('path_id')->unsigned();
+            $table->integer('path_start_date');
             $table->integer('level');
             $table->integer('repeat_chance_no');
             $table->string('user_status');
             $table->double('score');
             $table->timestamps();
+
+            $table->primary(['user_id', 'path_id', 'path_start_date']);
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('path_id')
+                ->references('id')->on('paths')
+                ->onDelete('cascade');
         });
     }
 
