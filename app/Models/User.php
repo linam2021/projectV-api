@@ -41,4 +41,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * The paths that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function paths()
+    {
+        return $this->belongsToMany(Path::class, 'user_path');
+    }
+
+    /**
+     * Get all of the pathUser for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userPaths()
+    {
+        return $this->hasMany(UserPath::class);
+    }
 }
