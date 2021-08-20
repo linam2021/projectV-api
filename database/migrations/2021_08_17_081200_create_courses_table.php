@@ -15,11 +15,12 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('path_id');
-            $table->string('name');
+            $table->BigInteger('path_id')->unsigned();
+            $table->string('course_name')->unique();
             $table->string('course_link');
-            $table->string('exam_link');
             $table->timestamps();
+
+            $table->foreign('path_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
