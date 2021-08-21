@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use App\Http\Requests\ResetRequest as ResetRequest;
-use App\Http\Requests\ForgotRequest as ForgotRequest;
+use App\Models\Password_reset;
 use App\Models\User;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Support\Str;
@@ -10,21 +9,31 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyTestMail;
 use Illuminate\Support\Facades\Hash;
-use IntlChar;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class ForgotResetController extends BaseController
 {
-    public function forgot(ForgotRequest $request)
+    public function forgot(Request $request)
     {
-       $email = $request->input('email');
-       if(User::where('email',$email)->doesntExist())
-         { return response(['massage' =>'User don\'t exists'], 404);}
+        $validator=Validator::make($request->all(),[
+        	'email'=>'required|email',
+        ]);
+        if ($validator->fails()) {
+        	return $this->sendError('Validate Error',$validator->errors());
+        }
+        $email = $request->input('email');
+        if(User::where('email',$email)->doesntExist())
+            { return $this->sendError(['massage' =>'User does not exists'], ['status'=> 404]);}
 
        try{
-        $oldToken = DB::table('password_resets')->where('email', $email)->first();
-        if ($oldToken) {
+        $oldToken = Password_reset::where('email', $email)->first();
+        if ($oldToken){
+            $newToken = str::random(6);
+            $oldToken->token = $newToken;
+            $oldToken->save();
             Mail::to($email)->send(new MyTestMail($oldToken->token));
-        return response(['message'=>'check your email']);
+            return $this->sendResponse(['massage' =>'check your email'],['status'=> 200]);
         }
         else
         {
@@ -36,45 +45,45 @@ class ForgotResetController extends BaseController
 
            // Send to Email
            Mail::to($email)->send(new MyTestMail($token));
-           return response(['message'=>'check your email']);
+           return $this->sendResponse(['massage' =>'check your email'],['status'=> 200]);
         }
 
-     }catch (\Exception $exception){
-
-        return response(['message' => $exception->getMessage()], 400);
+      }catch (\Exception $exception){
+        return $this->sendError(['message' => $exception->getMessage()], ['status'=> 404]);
      }
 
     }
 
-public function reset(ResetRequest $request)
-   {
-
-    $token = $request->input('token');
-
-    if(!$passwordReset = DB::table('password_resets')->where('token' ,$token)->first()){
-
-        return response([
-           'message' => 'Invalid token'], 400);
+    public function reset(Request $request)
+    {
+      try{
+        $validator=Validator::make($request->all(),[
+        'token'=>'required',
+        'email'=>'required|email',
+        'password'=>'required',
+        'c_password'=>'required|same:password',
+     ]);
+     if ($validator->fails()) {
+         return $this->sendErorr('Validate Error',$validator->errors());
         }
 
+     $token = $request->input('token');
+     $email = $request->input('email');
+     $passwordReset = Password_reset::where('token', $token)
+     ->where('email', $email)
+     ->first();
+     if (!$user = User::where('email' , $email)->first()){
+        return $this->sendError(['massage' =>'User does not exists'], ['status'=> 404]);
+     }
+     if(!$passwordReset){
+           return $this->sendError(['massage' =>'Invalid token'], ['status'=> 400]);
+        }
+     $user->password = Hash::make($request->input('password'));
+     $user->save();
+        return $this->sendResponse(['massage' =>'password was changed'],['status'=> 200]);
 
-
-      if (!$user = User::where('email' , $passwordReset->email)->first()){
-
-        return response([
-
-            'message' => 'User doesn\'t exist!'],404 );
-
-      }
-
-      $user->password = Hash::make($request->input('password'));
-      $user->save();
-
-      return  response([
-
-        'message' => 'success'
-      ]);
+     }catch (\Exception $exception){
+        return $this->sendError(['message' => $exception->getMessage()], ['status'=> 404]);
+    }
    }
-
-
 }
