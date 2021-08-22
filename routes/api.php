@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +29,12 @@ Route::post('reset', [ForgotResetController::class,'reset']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+//routes for MessageController
+Route::middleware('auth:api')->group( function (){
+    Route::get('messages', [MessageController::class, 'messages']);
+    Route::get('getMessageById/{id}', [MessageController::class, 'getMessageById']);
+    Route::put('mark-read/{id}', [MessageController::class, 'markMessageAsRead']);
+    Route::delete('deleteMessage/{id}', [MessageController::class, 'deleteMessage']);
 });
 
