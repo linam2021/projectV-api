@@ -37,4 +37,13 @@ Route::middleware('auth:api')->group( function (){
     Route::put('mark-read/{id}', [MessageController::class, 'markMessageAsRead']);
     Route::delete('deleteMessage/{id}', [MessageController::class, 'deleteMessage']);
 });
-
+//routes for NotificationController
+Route::middleware('auth:api')->group( function (){
+    Route::get('notifications', [NotificationController::class, 'notifications']);
+    Route::get('getNotificationById/{id}', [NotificationController::class, 'getNotifiationById']);
+    Route::put('close-notification', [NotificationController::class, 'closeNotifications']);
+    Route::put('open-notification', [NotificationController::class, 'openNotifications']);
+    Route::put('mark-read/{id}', [NotificationController::class, 'markNotificationAsRead']);
+    Route::delete('deleteNotification/{id}', [NotificationController::class, 'deleteNotification']);
+    Route::delete('clearNotifications', [NotificationController::class, 'clearNotifications']);
+});

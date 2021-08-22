@@ -69,6 +69,6 @@ class User extends Authenticatable
     //define many to many relationship between users and notifications
     public function notifications()
     {
-        return $this->belongsToMany('App/Models/Message');
+        return $this->belongsToMany('App\Models\Notification');
     }
 }

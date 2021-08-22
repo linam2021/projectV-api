@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Message;
-use App\Models\MessageUser;
+use App\Models\Notification;
+use App\Models\NotificationUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class MessageUserTableSeeder extends Seeder
+class NotificationUserTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,14 +19,14 @@ class MessageUserTableSeeder extends Seeder
     {
         $now = Carbon::now()->toDateTimeString();
         $users=User::where('is_admin',0)->get();
-        $messages=Message::all();
-        MessageUser::insert([
+        $notifications=Notification::all();
+        NotificationUser::insert([
             ['user_id' => $users->random()->id,
-              'message_id' =>$messages->random()->id,
+              'notification_id' =>$notifications->random()->id,
               'read'=>0,
              'created_at' => $now, 'updated_at' => $now],
              ['user_id' => $users->random()->id,
-             'message_id' =>$messages->random()->id,
+             'notification_id' =>$notifications->random()->id,
               'read'=>0,
              'created_at' => $now, 'updated_at' => $now],
 
