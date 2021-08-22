@@ -11,6 +11,8 @@ class Path extends Model
 
     protected $fillable = ['path_name'];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     /**
      * The users that belong to the Path
      *
