@@ -15,18 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 // api/register || login || logout
 Route::post('register',[AuthController::class, 'register'])->name('user.register');
 Route::post('login', [AuthController::class, 'login'])->name('user.login');
-Route::get('logout', [AuthController::class, 'logout'])->name('user.logout');
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
 
 // routes for user to verify email
 Route::get('user', [AuthController::class, 'user'])->middleware('auth:api');
 Route::post('forgot', [ForgotResetController::class,'forgot']);
 Route::post('reset', [ForgotResetController::class,'reset']);
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
