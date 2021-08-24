@@ -26,11 +26,6 @@ class MessagesTableSeeder extends Seeder
              'body' =>'Your registration has been refused for database-api path try later',
              'admin_id'=>3,
             'created_at' => $now, 'updated_at' => $now],
-
-
-
-
-
         ]);
     }
 }

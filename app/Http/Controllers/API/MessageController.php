@@ -17,11 +17,10 @@ class MessageController extends BaseController
             // get the current user authenticated
             $user=Auth::user();
             //get user messages, makeHideen to exclude pivot table (message_user)
-            $messages = $user->messages->makeHidden('pivot');;
+            $messages = $user->messages->makeHidden('pivot');
             //verify if list is empty
-            if($messages->isEmpty()){
+            if($messages->isEmpty())
                 return $this->sendError('Your messages list is empty!');
-            }
             return $this->sendResponse($messages,'messages retrieved successfully!');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
@@ -31,9 +30,8 @@ class MessageController extends BaseController
     public function getMessageById(Request $request, $id){
         try {
             $message= Message::find($id);
-        if(is_null($message)){
+        if(is_null($message))
             return $this->sendError('message not found!');
-        }
         return $this->sendResponse($message,'message was retrieved successfully');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
@@ -64,9 +62,8 @@ class MessageController extends BaseController
             if($message){
                 DB::table('message_user')->where('user_id',$user_id)->where('message_id',$id)->delete();
                     return $this->sendResponse($message,'message deleted successfully.');
-                }else{
+                }else
                 return $this->sendError('this message not founded');
-                }
             }
         catch (\Throwable $th) {
             return $this->sendError($th->getMessage());

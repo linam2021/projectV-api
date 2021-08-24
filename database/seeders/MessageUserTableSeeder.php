@@ -26,7 +26,6 @@ class MessageUserTableSeeder extends Seeder
               'message_id' =>2,
               'read'=>0,
              'created_at' => $now, 'updated_at' => $now],
-
         ]);
     }
 }
