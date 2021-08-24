@@ -55,7 +55,7 @@ class MessageController extends BaseController
         }
     }
      //delete a notification for user
-     public function deleteMessage(Request $request,$id){
+     public function deleteMessage($id){
         try {
             $user_id=Auth::id();
             $message=MessageUser::where('user_id',$user_id)->where('message_id',$id)->first();
