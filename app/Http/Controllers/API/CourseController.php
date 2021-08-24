@@ -4,61 +4,30 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CourseController extends BaseController
 {
     /**
-     * Display a listing of the resource.
+     * Show Current Course For User
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        $user = Auth::user();
+        // Verify If User Has Path Now
+        // 1 => Accept
+        $path_now = $user->userPaths->where('user_status', 1)->first();
+        if (!$path_now) {
+            return $this->sendError('error', 'You Do Not Have Any Course Now', 404);
+        }
+        // Get Path
+        $path = $user->paths->where('id', $path_now->path_id)->first();
+        // Waiting others people for making events table which uses for filter date begining a path
         //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // Get Course Depends On A Path And A Current Stage
+        $course = $path->courses->where('stage', $path->current_stage)->first();
+        return $this->sendResponse($course, 'Retrived Current Course successfully', 200);
     }
 }

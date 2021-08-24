@@ -11,5 +11,5 @@ class Course extends Model
 
     protected $fillable = ['path_id', 'name', 'course_link'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'path_id'];
 }

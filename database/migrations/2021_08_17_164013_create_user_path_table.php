@@ -17,10 +17,9 @@ class CreateUserPathTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('path_id')->unsigned();
             $table->dateTime('path_start_date');
-            $table->integer('level');
-            $table->integer('repeat_chance_no');
-            $table->string('user_status');
-            $table->double('score');
+            $table->integer('repeat_chance_no')->default(1);
+            $table->integer('user_status');
+            $table->double('score')->default(0);
             $table->timestamps();
 
             $table->primary(['user_id', 'path_id', 'path_start_date']);
