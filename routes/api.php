@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,5 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
 Route::get('user', [AuthController::class, 'user'])->middleware('auth:api');
 Route::post('forgot', [ForgotResetController::class,'forgot']);
 Route::post('reset', [ForgotResetController::class,'reset']);
+
 

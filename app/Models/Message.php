@@ -25,7 +25,7 @@ class Message extends Model
     }
 
     //define one to one relationship between messages and nbotifications tables, a message has one notification
-    public function nitification(){
+    public function notification(){
         return $this->hasOne('App\Models\Notification');
     }
 }
