@@ -17,8 +17,8 @@ class CourseController extends BaseController
     {
         $user = Auth::user();
         // Verify If User Has Path Now
-        // 1 => Accept
-        $path_now = $user->userPaths->where('user_status', 1)->first();
+        // 2 => Accepted From Admin
+        $path_now = $user->userPaths->where('user_status', 2)->first();
         if (!$path_now) {
             return $this->sendError('error', 'You Do Not Have Any Course Now', 404);
         }

@@ -32,11 +32,17 @@ class PathController extends BaseController
     {
         $validate = Validator::make($request->all(), [
             'path_id' => 'required|integer',
+            'why_do_you_want_to_join' => 'required|string',
+            'why_should_we_accept_you' => 'required|string'
         ]);
 
         if ($validate->fails()) {
             return $this->sendError('Validate Error', $validate->errors(), 400);
         }
+
+        $path_id = $request->path_id;
+        $answer_join = $request->why_do_you_want_to_join;
+        $answer_accept_order = $request->why_should_we_accept_you;
 
         // Verify Path Is There
         if (!Path::find($request->path_id)) {
@@ -47,8 +53,8 @@ class PathController extends BaseController
         $user = Auth::user();
         if (
             $user->userPaths()
-            ->where('user_status', 0)
-            ->orWhere('user_status', 1)
+            ->where('user_status', 1)
+            ->orWhere('user_status', 2)
             ->count() > 0
         ) {
             return $this->sendError('Error', 'You Are Already Joined To Path', 400);
@@ -59,9 +65,11 @@ class PathController extends BaseController
 
         UserPath::create([
             'user_id' => $user->id,
-            'path_id' => $request->path_id,
+            'path_id' => $path_id,
             'path_start_date' => $path_start_date,
-            'user_status' => 0, // 0 => waiting for confirm from admin
+            'answer_join' => $answer_join,
+            'answer_accept_order' => $answer_accept_order,
+            'user_status' => 1, // 1 => waiting for confirm from admin
         ]);
 
         return $this->sendResponse([], 'You Are Join To Path Successfully, Please Wait For Confirm From Admin');
@@ -73,24 +81,24 @@ class PathController extends BaseController
     public function show()
     {
         $user = Auth::user();
-        // Get Path If User Accepted 1 => Accept
-        $path_accept = $user->userPaths->where('user_status', 1)->first();
+        // Get Path If User Accepted || 2 => Accept
+        $path_accept = $user->userPaths->where('user_status', 2)->first();
         if ($path_accept) {
             $path_id = $path_accept->path_id;
             $path = Path::find($path_id);
             return $this->sendResponse($path, 'Confirm Successfully You Can Learn Now', 200);
         }
 
-        // Get Path If User Still Waiting 0 => Waiting
-        $path_wait = $user->userPaths->where('user_status', 0)->first();
+        // Get Path If User Still Waiting || 0 => Waiting from confirm admin
+        $path_wait = $user->userPaths->where('user_status', 1)->first();
         if ($path_wait) {
             $path_id = $path_wait->path_id;
             $path = Path::find($path_id);
             return $this->sendResponse($path, 'A Path Does Not Confirm Yet!', 200);
         }
 
-        // User Rejected 2 => Rejected
-        $path_refuse = $user->userPaths->where('user_status', 2)->first();
+        // User Rejected || 2 => Rejected
+        $path_refuse = $user->userPaths->where('user_status', 3)->first();
         if ($path_refuse) {
             $path_id = $path_refuse->path_id;
             $path = Path::find($path_id);

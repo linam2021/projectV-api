@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'device_token',
+        'accept_notification',
+        'profile_id',
     ];
 
     /**
@@ -60,5 +64,15 @@ class User extends Authenticatable
     public function userPaths()
     {
         return $this->hasMany(UserPath::class);
+    }
+    //define many to many relationship between users and messages
+    public function messages()
+    {
+        return $this->belongsToMany('App\Models\Message')->withTimestamps()->withPivot('read');;
+    }
+    //define many to many relationship between users and notifications
+    public function notifications()
+    {
+        return $this->belongsToMany('App\Models\Notification');
     }
 }
