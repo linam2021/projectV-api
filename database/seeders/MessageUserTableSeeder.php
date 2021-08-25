@@ -29,7 +29,6 @@ class MessageUserTableSeeder extends Seeder
              'message_id' =>$messages->random()->id,
               'read'=>0,
              'created_at' => $now, 'updated_at' => $now],
-
         ]);
     }
 }

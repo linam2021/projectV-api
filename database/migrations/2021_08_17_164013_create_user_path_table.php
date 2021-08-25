@@ -14,9 +14,9 @@ class CreateUserPathTable extends Migration
     public function up()
     {
         Schema::create('user_path', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->integer('path_id')->unsigned();
-            $table->integer('path_start_date');
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('path_id')->unsigned();
+            $table->date('path_start_date');
             $table->integer('level');
             $table->integer('repeat_chance_no');
             $table->string('user_status');
