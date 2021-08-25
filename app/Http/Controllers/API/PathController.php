@@ -89,7 +89,7 @@ class PathController extends BaseController
             return $this->sendResponse($path, 'Confirm Successfully You Can Learn Now', 200);
         }
 
-        // Get Path If User Still Waiting || 0 => Waiting from confirm admin
+        // Get Path If User Still Waiting || 1 => Waiting from confirm admin
         $path_wait = $user->userPaths->where('user_status', 1)->first();
         if ($path_wait) {
             $path_id = $path_wait->path_id;
@@ -97,7 +97,7 @@ class PathController extends BaseController
             return $this->sendResponse($path, 'A Path Does Not Confirm Yet!', 200);
         }
 
-        // User Rejected || 2 => Rejected
+        // User Rejected || 3 => Rejected
         $path_refuse = $user->userPaths->where('user_status', 3)->first();
         if ($path_refuse) {
             $path_id = $path_refuse->path_id;
