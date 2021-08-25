@@ -29,7 +29,6 @@ class NotificationUserTableSeeder extends Seeder
              'notification_id' =>$notifications->random()->id,
               'read'=>0,
              'created_at' => $now, 'updated_at' => $now],
-
         ]);
     }
 }
