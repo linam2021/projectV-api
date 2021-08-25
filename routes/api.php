@@ -37,6 +37,3 @@ Route::middleware('auth:api')->group( function (){
     Route::put('mark-read/{id}', [MessageController::class, 'markMessageAsRead']);
     Route::delete('deleteMessage/{id}', [MessageController::class, 'deleteMessage']);
 });
-
-
-
