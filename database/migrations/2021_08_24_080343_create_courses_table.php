@@ -18,9 +18,10 @@ class CreateCoursesTable extends Migration
             $table->bigInteger('path_id')->unsigned();
             $table->string('course_name')->unique();
             $table->string('course_link');
+            $table->integer('stage');
             $table->timestamps();
 
-            //$table->foreign('path_id')->references('id')->on('paths')->onDelete('cascade');
+            $table->foreign('path_id')->references('id')->on('paths')->onDelete('cascade');
         });
     }
 

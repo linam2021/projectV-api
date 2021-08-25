@@ -13,6 +13,6 @@ class UserPath extends Model
     protected $table = 'user_path';
 
     protected $fillable = [
-        'user_id', 'path_id', 'user_status', 'level', 'repeat_chance_no', 'score',
+        'user_id', 'path_id', 'path_start_date', 'user_status', 'level', 'repeat_chance_no', 'score', 'answer_join', 'answer_accept_order',
     ];
 }

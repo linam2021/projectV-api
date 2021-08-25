@@ -16,6 +16,8 @@ class CreatePathsTable extends Migration
         Schema::create('paths', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('path_name')->unique();
+            $table->string('level');
+            $table->integer('current_stage')->default(1);
             $table->timestamps();
         });
     }
