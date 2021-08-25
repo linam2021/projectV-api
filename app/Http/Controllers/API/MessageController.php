@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\DB;
 class MessageController extends BaseController
 {
     //show messages for a user
-    public function messages(Request $request){
+    public function messages(){
         try {
             // get the current user authenticated
             $user=Auth::user();
             //get user messages, makeHideen to exclude pivot table (message_user)
             $messages = $user->messages->makeHidden('pivot');
             //verify if list is empty
-            if($messages->isEmpty())
+            if ($messages->isEmpty())
                 return $this->sendError('Your messages list is empty!');
             return $this->sendResponse($messages,'messages retrieved successfully!');
         } catch (\Throwable $th) {
@@ -27,24 +27,24 @@ class MessageController extends BaseController
         }
     }
     //show content of message
-    public function getMessageById(Request $request, $id){
+    public function getMessageById($id){
         try {
             $message= Message::find($id);
-        if(is_null($message))
-            return $this->sendError('message not found!');
-        return $this->sendResponse($message,'message was retrieved successfully');
-        } catch (\Throwable $th) {
-            return $this->sendError($th->getMessage());
-        }
+            if (is_null($message))
+                return $this->sendError('message not found!');
+            return $this->sendResponse($message,'message was retrieved successfully');
+            } catch (\Throwable $th) {
+                return $this->sendError($th->getMessage());
+            }
     }
     //mark message as read
-    public function markMessageAsRead(Request $request,$id){
+    public function markMessageAsRead($id){
         try {
             //get current user
             $user=Auth::user();
             //get message of user
             $message=MessageUser::where('user_id',$user->id)->where('message_id',$id)->first();
-            if(is_null($message))
+            if (is_null($message))
                 return $this->sendError('message not found');
             MessageUser::where('user_id',$user->id)->where('message_id',$id)->update(array('read'=>1));
             //get object after update
@@ -59,7 +59,7 @@ class MessageController extends BaseController
         try {
             $user_id=Auth::id();
             $message=MessageUser::where('user_id',$user_id)->where('message_id',$id)->first();
-            if($message){
+            if ($message){
                 DB::table('message_user')->where('user_id',$user_id)->where('message_id',$id)->delete();
                     return $this->sendResponse($message,'message deleted successfully.');
                 }else

@@ -20,7 +20,7 @@ class NotificationTableSeeder extends Seeder
         $messages=Message::all();
         Notification::insert([
             ['title' => 'you have a new message',
-              'body' =>'your registration have been accepted check your messages box ',
+              'body' =>'your registration have been accepted check your messages box',
               'message_id' =>$messages->random()->id,
              'created_at' => $now, 'updated_at' => $now],
              ['title' => 'send push notification',
