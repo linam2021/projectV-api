@@ -38,16 +38,16 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('deleteMessage/{id}', [MessageController::class, 'deleteMessage']);
 
     // Current Course For User
-    Route::get('/course', [CourseController::class, 'index']);
+    Route::get('/course', [CourseController::class, 'currnetUserCourse']);
 
     // Routes For Path (Show All, Store A Path, Show Current A Path)
     Route::get('/paths', [PathController::class, 'index']);
-    Route::post('/paths/store', [PathController::class, 'store']);
+    Route::post('/paths/store', [UserPathController::class, 'store']);
     Route::get('/paths/show', [PathController::class, 'show']);
 });
 
 //routes for NotificationController
-Route::middleware('auth:api')->group( function (){
+Route::middleware('auth:api')->group(function () {
     Route::get('notifications', [NotificationController::class, 'notifications']);
     Route::get('getNotificationById/{id}', [NotificationController::class, 'getNotifiationById']);
     //Route::put('close-notification', [NotificationController::class, 'closeNotifications']);
