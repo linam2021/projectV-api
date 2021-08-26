@@ -17,7 +17,7 @@ class CreatePathsTable extends Migration
             $table->bigIncrements('id');
             $table->string('path_name')->unique();
             $table->string('level');
-            $table->integer('current_stage')->default(1);
+            $table->integer('current_stage')->default(0);
             $table->timestamps();
         });
     }

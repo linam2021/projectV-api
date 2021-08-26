@@ -13,7 +13,7 @@ class CourseController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function currnetUserCourse()
     {
         $user = Auth::user();
         // Verify If User Has Path Now
