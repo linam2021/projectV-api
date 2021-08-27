@@ -27,9 +27,13 @@ class NotificationController extends BaseController
     //get notification by id
     public function getNotifiationById($id){
         try {
-            $notification= Notification::find($id);
+            $user=Auth::user();
+            $notificationUser=NotificationUser::where('user_id',$user->id)->where('notification_id',$id)->first();
+            if(is_null($notificationUser))
+                return $this->sendError('you are not allowed ');
+            $notification = Notification::find($notificationUser->notification_id)->first();
             if(is_null($notification))
-                return $this->sendError('notification not found!');
+                return $this->sendError('notification not found');
             return $this->sendResponse($notification,'notification was retrieved successfully');
             } catch (\Throwable $th) {
                 return $this->sendError($th->getMessage());
