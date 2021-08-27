@@ -16,8 +16,8 @@ class MessageController extends BaseController
         try {
             // get the current user authenticated
             $user=Auth::user();
-            //get user messages, makeHideen to exclude pivot table (message_user)
-            $messages = $user->messages->makeHidden('pivot');
+            //get user messages
+            $messages = $user->messages;
             //verify if list is empty
             if ($messages->isEmpty())
                 return $this->sendError('Your messages list is empty!');
@@ -29,9 +29,13 @@ class MessageController extends BaseController
     //show content of message
     public function getMessageById($id){
         try {
-            $message= Message::find($id);
-            if (is_null($message))
-                return $this->sendError('message not found!');
+            $user=Auth::user();
+            $messageUser=MessageUser::where('user_id',$user->id)->where('message_id',$id)->first();
+            if(is_null($messageUser))
+                return $this->sendError('you are not allowed ');
+            $message = Message::find($messageUser->message_id)->first();
+            if(is_null($message))
+                return $this->sendError('message not found');
             return $this->sendResponse($message,'message was retrieved successfully');
             } catch (\Throwable $th) {
                 return $this->sendError($th->getMessage());
