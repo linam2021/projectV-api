@@ -37,12 +37,12 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('deleteMessage/{id}', [MessageController::class, 'deleteMessage']);
 
     // Current Course For User
-    Route::get('/course', [CourseController::class, 'currnetUserCourse']);
+    Route::get('currnetUserCourse', [CourseController::class, 'currnetUserCourse']);
 
     // Routes For Path (Show All, Store A Path, Show Current A Path)
-    Route::get('/paths', [PathController::class, 'index']);
-    Route::post('/paths/store', [UserPathController::class, 'store']);
-    Route::get('/paths/show', [PathController::class, 'show']);
+    Route::get('paths', [PathController::class, 'index']);
+    Route::post('userpath/store', [UserPathController::class, 'store']);
+    Route::get('userpath/show', [UserPathController::class, 'show']);
 });
 
 //routes for NotificationController

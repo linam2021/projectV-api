@@ -17,7 +17,7 @@ class UserTableSeeder extends Seeder
     {
         $now = Carbon::now()->toDateTimeString();
         DB::table('users')->insert([
-            'email' => 'email1@example.com',
+            'email' => 'admin1@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
 	        'is_admin'=>1,
@@ -25,7 +25,7 @@ class UserTableSeeder extends Seeder
             'updated_at' => $now
         ]);
          DB::table('users')->insert([
-            'email' => 'email2@example.com',
+            'email' => 'admin2@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
 	        'is_admin'=>1,
@@ -33,7 +33,7 @@ class UserTableSeeder extends Seeder
             'updated_at' => $now
         ]);
          DB::table('users')->insert([
-            'email' => 'email3@example.com',
+            'email' => 'admin3@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
 	        'is_admin'=>1,
@@ -41,7 +41,7 @@ class UserTableSeeder extends Seeder
             'updated_at' => $now
         ]);
         DB::table('users')->insert([
-            'email' => 'email4@example.com',
+            'email' => 'user1@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
 	        'is_admin'=>0,
@@ -49,7 +49,7 @@ class UserTableSeeder extends Seeder
             'updated_at' => $now
         ]);
         DB::table('users')->insert([
-            'email' => 'email5@example.com',
+            'email' => 'user2@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
 	        'is_admin'=>0,
