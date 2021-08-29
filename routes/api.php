@@ -55,3 +55,12 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('deleteNotification/{id}', [NotificationController::class, 'deleteNotification']);
     Route::delete('clearNotifications', [NotificationController::class, 'clearNotifications']);
 });
+
+
+//routes for ProfilesController
+Route::post('addProfile',[ProfilesController::class ,'addProfile'])->middleware('auth:api');
+Route::get('showProfile',[ProfilesController::class ,'showProfile'])->middleware('auth:api');
+
+
+//routes for EventsController
+Route::get('showEventApi',[EventsController::class ,'showEventApi'])->middleware('auth:api');
