@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NotificationUserTableSeeder::class);
         $this->call(PathTableSeeder::class);
         $this->call(CourseTableSeeder::class);
+        $this->call(EventTableSeeder::class);
     }
 }

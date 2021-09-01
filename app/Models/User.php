@@ -75,4 +75,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Models\Notification');
     }
+
+    public function profiles()
+    {
+        return $this->belongsTo(Profile::class, 'profile_id','id');
+    }
 }

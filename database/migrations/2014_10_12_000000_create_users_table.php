@@ -21,9 +21,13 @@ class CreateUsersTable extends Migration
             $table->integer('is_admin')->default('0');
             $table->string('device_token')->nullable();
             $table->string('accept_notification')->nullable();
-            $table->integer('profile_id')->nullable();
+            $table->bigInteger('profile_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('profile_id')
+                ->references('id')->on('profiles')
+                ->onDelete('cascade');
         });
     }
 

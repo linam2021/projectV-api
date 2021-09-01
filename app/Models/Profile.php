@@ -11,6 +11,6 @@ class Profile extends Model
     protected $fillable = ['first_name' , 'last_name' , 'telegram' ,'phone' ,'country','gender'];
 
     public function  user(){
-        $this -> belongsTo(User::class);
+        $this -> hasOne(User::class,'profile_id', 'id');
     }
 }

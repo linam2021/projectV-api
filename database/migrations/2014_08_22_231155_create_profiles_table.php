@@ -18,10 +18,10 @@ class CreateProfilesTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('telegram')->unique();
-            $table->integer('phone')->unique();
+            $table->string('phone')->unique();
             $table->string('country');
             $table->enum('gender',['male','female']);
-            $table->timestamps();
+            $table->timestamps();            
         });
     }
 

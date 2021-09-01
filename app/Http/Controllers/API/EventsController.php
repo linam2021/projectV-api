@@ -12,14 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class EventsController extends BaseController
 {
-  public function showEventApi(){
+  public function showAllEvents(){
      try{
-        $user=Auth::user();
-        $event=Event::get()->first();
+        $event=Event::get();
         if(!$event){
             return $this ->sendError(['message' =>'There are no event yet'], 404);
         }else{
-            return $this ->sendResponse ($event,['message' => 'Event added']);
+            return $this ->sendResponse ($event,['message' => 'Event is retrieved successfully']);
         }
     }catch (\Exception $exception){
         return $this->sendError(['message' => $exception->getMessage()], 404);
