@@ -20,7 +20,7 @@ class QuestionBankController extends BaseController
             else{
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post('http://gamequestionbank.herokuapp.com/api/api/showAllPaths', ['api_key' => $request->api_key])->json();
+                ])->post('http://gamequestionbank.herokuapp.com/api/showAllPaths', ['api_key' => $request->api_key])->json();
                 return $response;
             }
         }catch (\Exception $exception){
@@ -39,7 +39,7 @@ class QuestionBankController extends BaseController
             else{
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post('http://gamequestionbank.herokuapp.com/api/api/showPathCourses', ['api_key' => $request->api_key,'path_id'=>$request->path_id])->json();
+                ])->post('http://gamequestionbank.herokuapp.com/api/showPathCourses', ['api_key' => $request->api_key,'path_id'=>$request->path_id])->json();
                 return $response;
             }
         }catch (\Exception $exception){
