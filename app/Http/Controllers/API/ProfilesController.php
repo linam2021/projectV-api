@@ -17,8 +17,7 @@ class ProfilesController extends BaseController
             $user=Auth::user();
             if ($user->profile_id != null)
                 return $this ->SendError('You have profile previously');
-
-            $validitor = Validator::make($request->all(),[
+            $validator = Validator::make($request->all(),[
                 'first_name' =>'required',
                 'last_name' =>'required',
                 'telegram' =>'required|unique:profiles',
@@ -26,8 +25,8 @@ class ProfilesController extends BaseController
                 'country' =>'required',
                 'gender' =>'required',
             ]);
-            if ( $validitor ->fails()){
-                return $this ->sendError(['message' =>'check again' ,'error' =>  $validitor ->errors()], 404);
+            if ( $validator ->fails()){
+                return $this ->sendError(['message' =>'check again' ,'error' =>  $validator ->errors()], 404);
             }else{
                 // create profile
                 $profile=Profile::create([

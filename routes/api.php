@@ -62,3 +62,7 @@ Route::get('showProfile',[ProfilesController::class ,'showProfile'])->middleware
 
 //routes for EventsController
 Route::get('showAllEvents',[EventsController::class ,'showAllEvents'])->middleware('auth:api');
+
+Route::post('getAllQuestionBankPaths',[QuestionBankController::class ,'getAllQuestionBankPaths'])->middleware('auth:api');
+Route::post('showQuestionBankPathCourses',[QuestionBankController::class ,'showQuestionBankPathCourses'])->middleware('auth:api');
+Route::post('getExamQuestions',[QuestionBankController::class ,'getExamQuestions'])->middleware('auth:api');
