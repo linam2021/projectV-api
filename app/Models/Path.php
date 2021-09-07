@@ -9,7 +9,7 @@ class Path extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['path_name'];
+    protected $fillable = ['path_name','current_stage'];
 
     protected $hidden = ['created_at', 'updated_at', 'pivot'];
 

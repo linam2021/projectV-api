@@ -9,7 +9,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['path_id', 'name', 'course_link'];
+    protected $fillable = ['path_id', 'course_name', 'course_link','course_duration','stage'];
 
     protected $hidden = ['created_at', 'updated_at', 'path_id'];
 }

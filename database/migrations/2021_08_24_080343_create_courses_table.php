@@ -18,6 +18,7 @@ class CreateCoursesTable extends Migration
             $table->bigInteger('path_id')->unsigned();
             $table->string('course_name')->unique();
             $table->string('course_link');
+            $table->integer('course_duration');
             $table->integer('stage');
             $table->timestamps();
 
