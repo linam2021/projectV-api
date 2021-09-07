@@ -26,7 +26,7 @@ class ProfilesController extends BaseController
                 'gender' =>'required',
             ]);
             if ( $validator ->fails()){
-                return $this ->sendError(['message' =>'check again' ,'error' =>  $validator ->errors()], 404);
+                return $this ->sendError($validator ->errors());
             }else{
                 // create profile
                 $profile=Profile::create([
@@ -40,10 +40,10 @@ class ProfilesController extends BaseController
                 // Update user table in a column profile_id
                 $user->profile_id = $profile->id;
                 $user->save();
-                return $this ->sendResponse (['message' => 'Profile is created successfully'], 200);
+                return $this ->sendResponse ('Profile is created successfully');
             }
             }catch (\Exception $exception){
-                return $this->sendError(['message' => $exception->getMessage()], 404);
+                return $this->sendError($exception->getMessage());
         }
      }
 
@@ -54,12 +54,12 @@ class ProfilesController extends BaseController
             $profile = $user->profiles;
            // $profile = Profile::find($user_id);
             if (is_null($profile)){
-                return $this ->sendError(['message' =>'Profile is not found'], 404);
+                return $this ->sendError('Profile is not found');
             }else{
                 return $this ->sendResponse ($profile, 'User profile is retrieved successfully');
             }
         }catch (\Exception $exception){
-            return $this->sendError(['message' => $exception->getMessage()], 404);
+            return $this->sendError($exception->getMessage());
         }
   }
 }

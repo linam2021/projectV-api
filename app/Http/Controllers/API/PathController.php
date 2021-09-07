@@ -18,9 +18,9 @@ class PathController extends BaseController
         try {
             $paths = Path::orderBy('path_name', 'ASC')->get();
             if ($paths->count() > 0) 
-                return $this->sendResponse($paths, 'Retrived Paths Successfully', 200);
+                return $this->sendResponse($paths, 'Retrived Paths Successfully');
 
-            return $this->sendError('error', 'We do not have paths yet!', 404);
+            return $this->sendError('We do not have paths yet!');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }

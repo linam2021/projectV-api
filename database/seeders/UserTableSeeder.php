@@ -20,6 +20,7 @@ class UserTableSeeder extends Seeder
             'email' => 'admin1@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>1,
             'created_at' => $now,
             'updated_at' => $now
@@ -28,6 +29,7 @@ class UserTableSeeder extends Seeder
             'email' => 'admin2@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>1,
             'created_at' => $now,
             'updated_at' => $now
@@ -36,6 +38,7 @@ class UserTableSeeder extends Seeder
             'email' => 'admin3@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>1,
             'created_at' => $now,
             'updated_at' => $now
@@ -44,6 +47,7 @@ class UserTableSeeder extends Seeder
             'email' => 'user1@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>0,
             'created_at' => $now,
             'updated_at' => $now
@@ -52,6 +56,7 @@ class UserTableSeeder extends Seeder
             'email' => 'user2@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>0,
             'created_at' => $now,
             'updated_at' => $now
@@ -60,6 +65,7 @@ class UserTableSeeder extends Seeder
             'email' => 'email6@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
+            'is_verified'=>1,
 	        'is_admin'=>0,
             'created_at' => $now,
             'updated_at' => $now

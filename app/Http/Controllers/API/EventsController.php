@@ -16,12 +16,12 @@ class EventsController extends BaseController
      try{
         $event=Event::get();
         if(!$event){
-            return $this ->sendError(['message' =>'There are no event yet'], 404);
+            return $this ->sendError('There are no event yet');
         }else{
-            return $this ->sendResponse ($event,['message' => 'Event is retrieved successfully']);
+            return $this ->sendResponse($event,'Event is retrieved successfully');
         }
     }catch (\Exception $exception){
-        return $this->sendError(['message' => $exception->getMessage()], 404);
+        return $this->sendError($exception->getMessage());
     }
   }
 }

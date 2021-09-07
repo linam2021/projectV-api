@@ -21,7 +21,7 @@ class CourseController extends BaseController
             // 2 => Accepted From Admin
             $path_now = $user->userPaths->where('user_status', 2)->first();
             if (!$path_now) {
-                return $this->sendError('error', 'You Do Not Have Any Course Now', 404);
+                return $this->sendError('You Do Not Have Any Course Now');
             }
             // Get Path
             $path = $user->paths->where('id', $path_now->path_id)->first();
@@ -29,7 +29,7 @@ class CourseController extends BaseController
             //
             // Get Course Depends On A Path And A Current Stage
             $course = $path->courses->where('stage', $path->current_stage)->first();
-            return $this->sendResponse($course, 'Retrived Current Course successfully', 200);
+            return $this->sendResponse($course, 'Retrived Current Course successfully');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }

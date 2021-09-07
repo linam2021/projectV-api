@@ -16,7 +16,7 @@ class QuestionBankController extends BaseController
                 'api_key' => 'required',
             ]);
             if ( $validator ->fails())
-                return $this->sendError('Validate Error',$validator->errors());
+                return $this->sendError($validator->errors());
             else{
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
@@ -24,7 +24,7 @@ class QuestionBankController extends BaseController
                 return $response;
             }
         }catch (\Exception $exception){
-            return $this->sendError(['message' => $exception->getMessage()], 404);
+            return $this->sendError($exception->getMessage());
         }
     }
 
@@ -35,7 +35,7 @@ class QuestionBankController extends BaseController
                 'path_id' =>'required',
             ]);
             if ( $validator ->fails())
-                return $this->sendError('Validate Error',$validator->errors());
+                return $this->sendError($validator->errors());
             else{
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
@@ -43,7 +43,7 @@ class QuestionBankController extends BaseController
                 return $response;
             }
         }catch (\Exception $exception){
-            return $this->sendError(['message' => $exception->getMessage()], 404);
+            return $this->sendError($exception->getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ class QuestionBankController extends BaseController
                 'question_count' =>'required',
             ]);
             if ( $validator ->fails()){
-                return $this->sendError('Validate Error',$validator->errors());
+                return $this->sendError($validator->errors());
             }else{
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
@@ -63,7 +63,7 @@ class QuestionBankController extends BaseController
                 return $response;
             }
         }catch (\Exception $exception){
-            return $this->sendError(['message' => $exception->getMessage()], 404);
+            return $this->sendError($exception->getMessage());
         }
     }
 }

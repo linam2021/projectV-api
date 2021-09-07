@@ -22,11 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_verified',
         'device_token',
         'accept_notification',
         'profile_id',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *

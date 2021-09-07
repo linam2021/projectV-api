@@ -17,16 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// api/register || login || logout
-Route::post('register', [AuthController::class, 'register'])->name('user.register');
-Route::post('login', [AuthController::class, 'login'])->name('user.login');
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
-
-// routes for user to verify email
+//Routes for register, verifyEmail, resendVerificationEmailCode, login and logout
+Route::post('register', [AuthController::class, 'register']);
+Route::post('verifyEmail', [AuthController::class, 'verifyEmail']);
+Route::post('resendVerificationEmailCode', [AuthController::class, 'resendVerificationEmailCode']);
+Route::post('login', [AuthController::class, 'login']);
 Route::get('user', [AuthController::class, 'user'])->middleware('auth:api');
-Route::post('forgot', [ForgotResetController::class, 'forgot']);
-Route::post('reset', [ForgotResetController::class, 'reset']);
-
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:api');
+ 
+// Routs for forgotPassword and passwordReset
+Route::post('forgotPassword', [ForgotResetController::class, 'forgotPassword']);
+Route::post('passwordReset', [ForgotResetController::class, 'passwordReset']);
 
 // Routes For User
 Route::middleware('auth:api')->group(function () {
