@@ -24,16 +24,19 @@ class PathTableSeeder extends Seeder
         ]);
         DB::table('paths')->insert([
             'path_name' => 'Flutter',
+            'current_stage' => 1,
             'created_at' => $now,
             'updated_at' => $now
         ]);
         DB::table('paths')->insert([
             'path_name' => 'Design',
+            'current_stage' => 1,
             'created_at' => $now,
             'updated_at' => $now
         ]);
         DB::table('paths')->insert([
             'path_name' => 'Web',
+            'current_stage' => 1,
             'created_at' => $now,
             'updated_at' => $now
         ]);

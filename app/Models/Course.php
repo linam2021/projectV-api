@@ -12,4 +12,9 @@ class Course extends Model
     protected $fillable = ['path_id', 'course_name', 'course_link','course_duration','stage'];
 
     protected $hidden = ['created_at', 'updated_at', 'path_id'];
+
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
 }

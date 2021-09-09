@@ -35,18 +35,19 @@ class ExamController extends BaseController
                 $exam_link= false;
             }
             return $this->sendResponse([
+                                    'exam_id' => $exam->id,
                                     'exam_duration' =>$exam->exam_duration,
                                     'exam_link'  => $exam_link
-                                     ],'liste of exams date retrieved successfully');
-
+                                     ],'Exam Info is retrieved successfully'.$date_now.' dfd '. $exam_start_date);
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }
-    public function userExamResult(Request $request){
+
+    public function addUserExamResult(Request $request){
         try {
             $validator = Validator::make($request->all(),[
-            'mark' => 'required',
+            'exam_result' => 'required',
             'is_well_prepared' =>'required|in:yes,no ',
             'is_easy_exam' => 'required|in:easy,hard'
             ]);
@@ -54,61 +55,69 @@ class ExamController extends BaseController
                 return $this->sendError($validator->errors());
             //get current user
             $user = Auth::user();
-                //check if user has permission
-                $user_path = UserPath::where('user_id',$user->id)
-                                        ->where('user_status',2)
-                                        ->where('repeat_chance_no','!=',0)->first();
-                if(is_null($user_path))
-                    return $this->sendError('You are not allowed');
-                //get user mark
-                $user_result_mark= $request->mark;
-                //get number of exam questions
+            //check if user has permission
+            $user_path = UserPath::where('user_id',$user->id)
+                                    ->where('user_status',2)
+                                    ->where('repeat_chance_no','!=',0)->first();
+            if(is_null($user_path))
+                return $this->sendError('You are not allowed');
+            //get user exam result
+            $user_result_mark= $request->exam_result; 
 
-                $path=$user->paths->where('id',$user_path->path_id)->first();
-                $course= Course::where('path_id',$path->id)->where('stage',$path->current_stage)->first();
-                //get last exam of current stage course
-                $exam= Exam::where('course_id',$course->id)->get()->last();
-                // //store user exam informations
-                $user_exam = new UserExam();
-                $user_exam->user_id = $user->id;
-                $user_exam->path_id = $path->id;
-                $user_exam->path_start_date = $user_path->path_start_date;
-                $user_exam->exam_id=$exam->id;
-                $user_exam->user_exam_date = Carbon::now("Europe/Berlin")->toDateString();
-                $user_exam->is_well_prepared= $request->is_well_prepared;
-                $user_exam->is_easy_exam = $request->is_easy_exam;
-                $user_exam->exam_result= $user_result_mark;
-                $user_exam->save();
-                //compare user_mark with success_mark
-                $sucess_mark= $exam->sucess_mark;
-                if($user_result_mark < $sucess_mark){
-                    return $this->sendError('you failed,Do can try again after 24h');
-                }else{
-                    return $this->sendResponse($user_path,'you have succeeded ');
-                }
-
+            $path=$user->paths->where('id',$user_path->path_id)->first();
+            $course= Course::where('path_id',$user_path->path_id)->where('stage',$path->current_stage)->first();
+            //get last exam of current stage course
+            $exam= Exam::where('course_id',$course->id)->get()->last();
+            $isPreAddedUserExam= UserExam::where('user_id',$user->id)
+                                         ->where('path_id',$user_path->path_id)
+                                         ->where('path_start_date',$user_path->path_start_date)
+                                         ->where('exam_id',$exam->id)->first();                         
+            if ($isPreAddedUserExam)
+                return $this->sendError('Exam mark is added previously');            
+            // //store user exam informations
+            $user_exam = new UserExam();
+            $user_exam->user_id = $user->id;
+            $user_exam->path_id = $user_path->path_id;
+            $user_exam->path_start_date = $user_path->path_start_date;
+            $user_exam->exam_id=$exam->id;
+            $user_exam->user_exam_date = Carbon::now("Europe/Berlin")->toDateString();
+            $user_exam->is_well_prepared= $request->is_well_prepared;
+            $user_exam->is_easy_exam = $request->is_easy_exam;
+            $user_exam->exam_result= $user_result_mark;
+            $user_exam->save();
+            //compare user_mark with success_mark
+            $sucess_mark= $exam->sucess_mark;
+            $hasRepeatChance = ($user_path->repeat_chance_no>0);
+            if(($user_result_mark < $sucess_mark) && $hasRepeatChance ){
+                $user_path->update([
+                    'repeat_chance_no' => $user_path->repeat_chance_no -1,
+                ]);
+                return $this->sendError('you failed, try again after 24h');
+            } else if(($user_result_mark < $sucess_mark) && $hasRepeatChance )
+                return $this->sendError('You rre excluded, Game Over');
+            else
+                return $this->sendResponse('Success','You have succeeded');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
-
     }
-    public function examsDate(){
+
+    public function examDate(){
         try {
             $user = Auth::user();
             //get user path
             $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
             if(is_null($user_path))
                 return $this->sendError('You do not have access to any path');
-                $path=$user->paths->where('id',$user_path->path_id)->first();
-                $course= Course::where('path_id',$path->id)->where('stage',$path->current_stage)->first();
-                if(is_null($course))
-                    return $this->sendError('Course not found');
-                //get last exam of current stage course
-                $exams_dates=$course->exams->pluck('exam_start_date');
-                return $this->sendResponse($exams_dates,'exams dates retrieved successfully  ');
+            $path=$user->paths->where('id',$user_path->path_id)->first();
+            $course= Course::where('path_id',$path->id)->where('stage',$path->current_stage)->first();
+            if(is_null($course))
+                return $this->sendError('Course is not found');
+            //get last exam of current stage course
+            $exam_date=Carbon::parse($course->exams->last()->exam_start_date)->toDateString();
+            return $this->sendResponse($exam_date,'exam date is retrieved successfully');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }
-
 }

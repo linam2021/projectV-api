@@ -68,3 +68,10 @@ Route::post('getAllQuestionBankPaths',[QuestionBankController::class ,'getAllQue
 Route::post('showQuestionBankPathCourses',[QuestionBankController::class ,'showQuestionBankPathCourses'])->middleware('auth:api');
 Route::post('addExamQuestions',[QuestionBankController::class ,'addExamQuestions'])->middleware('auth:api');
 Route::post('getUserExamQuestions',[QuestionBankController::class ,'getUserExamQuestions'])->middleware('auth:api');
+
+//routes for userExams
+Route::middleware('auth:api')->group(function () {
+    Route::get('examInfo', [UserExamController::class, 'examInfo']);
+    Route::post('addUserExamResult', [UserExamController::class, 'addUserExamResult']);
+    Route::get('examDate', [UserExamController::class, 'examDate']);
+});

@@ -21,13 +21,13 @@ class CreateUserExamTable extends Migration
             $table->bigInteger('exam_id')->unsigned();
             //date which user passed exam
             $table->date('user_exam_date');
-            $table->double('exam_result')->default(0);
+            $table->double('exam_result')->nullable();
             $table->enum('is_well_prepared',['yes','no']);
             $table->enum('is_easy_exam',['easy','hard']);
             $table->primary(['user_id', 'path_id', 'path_start_date']);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('path_id')->references('id')->on('paths')->onDelete('cascade');
-            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
+            $table->foreign(['user_id','path_id','path_start_date'])
+                  ->references(['user_id','path_id','path_start_date'])->on('user_path')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }
