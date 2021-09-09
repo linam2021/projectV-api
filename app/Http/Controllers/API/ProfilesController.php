@@ -18,6 +18,7 @@ class ProfilesController extends BaseController
                 return $this ->SendError('You have profile previously');
             $validator = Validator::make($request->all(),[
                 'first_name' =>'required',
+                'father_name' =>'required',
                 'last_name' =>'required',
                 'telegram' =>'required|unique:profiles',
                 'phone' =>'required|unique:profiles',
@@ -30,6 +31,7 @@ class ProfilesController extends BaseController
                 // create profile
                 $profile=Profile::create([
                     'first_name' =>$request->first_name,
+                    'father_name' =>$request->father_name,
                     'last_name' =>$request->last_name,
                     'telegram' =>$request->telegram,
                     'phone' => $request->phone,
@@ -39,9 +41,9 @@ class ProfilesController extends BaseController
                 // Update user table in a column profile_id
                 $user->profile_id = $profile->id;
                 $user->save();
-                return $this ->sendResponse ('Profile is created successfully');
+                return $this ->sendResponse ('Success','Profile is created successfully');
             }
-            }catch (\Exception $exception){
+        }catch (\Exception $exception){
                 return $this->sendError($exception->getMessage());
         }
      }
@@ -52,11 +54,10 @@ class ProfilesController extends BaseController
             // find user profile 
             $profile = $user->profiles;
            // $profile = Profile::find($user_id);
-            if (is_null($profile)){
+            if (is_null($profile))
                 return $this ->sendError('Profile is not found');
-            }else{
+            else
                 return $this ->sendResponse ($profile, 'User profile is retrieved successfully');
-            }
         }catch (\Exception $exception){
             return $this->sendError($exception->getMessage());
         }
