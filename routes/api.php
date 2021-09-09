@@ -56,11 +56,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('userpath/store', [UserPathController::class, 'store']);
     Route::get('userpath/show', [UserPathController::class, 'show']);
 
-    //routes for ProfilesController
+    //Routes for ProfilesController
     Route::post('addProfile',[ProfilesController::class ,'addProfile'])->middleware('auth:api');
     Route::get('showProfile',[ProfilesController::class ,'showProfile'])->middleware('auth:api');
 
-    //Route for showAllEvents
+    //Routes for getDateTime and showAllEvents
+    Route::get('getDateTime',[EventsController::class ,'getDateTime']);
     Route::get('showAllEvents',[EventsController::class ,'showAllEvents']);
 
     //Routes for QuestinBankController

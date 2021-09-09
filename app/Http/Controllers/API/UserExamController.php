@@ -74,7 +74,7 @@ class UserExamController extends BaseController
                                          ->where('exam_id',$exam->id)->first();                         
             if ($isPreAddedUserExam)
                 return $this->sendError('Exam mark is added previously');            
-            // //store user exam informations
+            //store user exam informations
             $user_exam = new UserExam();
             $user_exam->user_id = $user->id;
             $user_exam->path_id = $user_path->path_id;
@@ -85,6 +85,12 @@ class UserExamController extends BaseController
             $user_exam->is_easy_exam = $request->is_easy_exam;
             $user_exam->exam_result= $user_result_mark;
             $user_exam->save();
+            //update user score in user_score table
+            UserPath::where('user_id',$user->id)
+                                    ->where('user_status',2)
+                                    ->where('repeat_chance_no','!=',0)
+                                    ->update(['score' => $user_path->score + $user_result_mark,
+                                             ]);
             //compare user_mark with success_mark
             $sucess_mark= $exam->sucess_mark;
             $hasRepeatChance = ($user_path->repeat_chance_no>0);

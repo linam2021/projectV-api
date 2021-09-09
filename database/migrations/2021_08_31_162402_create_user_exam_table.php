@@ -24,7 +24,7 @@ class CreateUserExamTable extends Migration
             $table->double('exam_result')->nullable();
             $table->enum('is_well_prepared',['yes','no']);
             $table->enum('is_easy_exam',['easy','hard']);
-            $table->primary(['user_id', 'path_id', 'path_start_date']);
+            $table->primary(['user_id', 'path_id', 'path_start_date','exam_id']);
             $table->foreign(['user_id','path_id','path_start_date'])
                   ->references(['user_id','path_id','path_start_date'])->on('user_path')
                   ->onDelete('cascade');
