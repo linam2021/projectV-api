@@ -117,7 +117,7 @@ class AuthController extends BaseController
         }
     }
 
-    public function user()
+    public function userInfo()
     {
         try {
             return Auth::User();
