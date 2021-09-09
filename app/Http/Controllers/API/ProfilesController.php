@@ -7,7 +7,6 @@ use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\API\BaseController;
-use App\Http\Controllers\Controller as Controller;
 use Illuminate\Support\Facades\DB;
 
 class ProfilesController extends BaseController

@@ -66,4 +66,5 @@ Route::get('showAllEvents',[EventsController::class ,'showAllEvents'])->middlewa
 
 Route::post('getAllQuestionBankPaths',[QuestionBankController::class ,'getAllQuestionBankPaths'])->middleware('auth:api');
 Route::post('showQuestionBankPathCourses',[QuestionBankController::class ,'showQuestionBankPathCourses'])->middleware('auth:api');
-Route::post('getExamQuestions',[QuestionBankController::class ,'getExamQuestions'])->middleware('auth:api');
+Route::post('addExamQuestions',[QuestionBankController::class ,'addExamQuestions'])->middleware('auth:api');
+Route::post('getUserExamQuestions',[QuestionBankController::class ,'getUserExamQuestions'])->middleware('auth:api');
