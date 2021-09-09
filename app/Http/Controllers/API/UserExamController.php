@@ -38,7 +38,7 @@ class UserExamController extends BaseController
                                     'exam_id' => $exam->id,
                                     'exam_duration' =>$exam->exam_duration,
                                     'exam_link'  => $exam_link
-                                     ],'Exam Info is retrieved successfully'.$date_now.' dfd '. $exam_start_date);
+                                     ],'Exam Info is retrieved successfully');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
