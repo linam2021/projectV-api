@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class ExamController extends BaseController
+class UserExamController extends BaseController
 {
     public function examInfo(){
         try {
