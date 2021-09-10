@@ -31,14 +31,6 @@ class CreateQuestionsTable extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
         });
-
-
-        
-
-        // Add the constraint
-    // DB::statement('ALTER TABLE questions ADD CONSTRAINT sub_question_fk foreign('exam_id')
-    // ->references('id')->on('exams')
-    // ->onDelete('cascade');');
     }
 
     /**

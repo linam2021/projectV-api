@@ -126,6 +126,40 @@ class AuthController extends BaseController
         }
     }
 
+    public function addProfile(Request $request)
+    {
+        try{
+            $user=Auth::user();
+            if ($user->first_name != null)
+                return $this ->SendError('You have profile previously');
+            $validator = Validator::make($request->all(),[
+                'first_name' =>'required',
+                'father_name' =>'required',
+                'last_name' =>'required',
+                'telegram' =>'required|unique:users',
+                'phone' =>'required|unique:users',
+                'country' =>'required',
+                'gender' =>'required',
+            ]);
+            if ( $validator ->fails()){
+                return $this ->sendError($validator ->errors());
+            }else{
+                User::where('id',$user->id)                
+                ->update(['first_name' =>$request->first_name,
+                         'father_name' =>$request->father_name,
+                         'last_name' =>$request->last_name,
+                         'telegram' =>$request->telegram,
+                         'phone' => $request->phone,
+                         'country' => $request->country,
+                         'gender' =>$request->gender,
+                        ]);
+                return $this ->sendResponse ('Success','User profile is added successfully');
+            }
+        }catch (\Exception $exception){
+                return $this->sendError($exception->getMessage());
+        }
+    }
+    
     public function logout(Request $request)
     {
         try {

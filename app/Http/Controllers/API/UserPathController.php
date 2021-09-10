@@ -45,7 +45,7 @@ class UserPathController extends BaseController
             }
 
             // Verify User If He Complete His Profile
-            if (!$user->profile_id) {
+            if (!$user->first_name) {
                 return $this->sendError('Sorry, You Can Not Join To A Path. You Need To Complete Your Profile First');
             }
 
@@ -81,7 +81,7 @@ class UserPathController extends BaseController
         try {
             $user = Auth::user();
             // If User Does Not Complete His Profile
-            if (!$user->profile_id) {
+            if (!$user->first_name) {
                 return $this->sendError('Sorry, You Need To Complete Your Profile First');
             }
             

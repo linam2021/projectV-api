@@ -29,10 +29,11 @@ Route::post('passwordReset', [ForgotResetController::class, 'passwordReset']);
 
 // Routes For User
 Route::middleware('auth:api')->group(function () {
-    //Routes for userInfo, logout
+    //Routes for userInfo, logout ,addProfile
     Route::get('userInfo', [AuthController::class, 'userInfo']);
+    Route::post('addProfile',[AuthController::class ,'addProfile'])->middleware('auth:api');
     Route::get('logout', [AuthController::class, 'logout']);
-
+    
     // Routes For MessageController
     Route::get('messages', [MessageController::class, 'messages']);
     Route::get('getMessageById/{id}', [MessageController::class, 'getMessageById']);
@@ -55,10 +56,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('paths', [PathController::class, 'index']);
     Route::post('userpath/store', [UserPathController::class, 'store']);
     Route::get('userpath/show', [UserPathController::class, 'show']);
-
-    //Routes for ProfilesController
-    Route::post('addProfile',[ProfilesController::class ,'addProfile'])->middleware('auth:api');
-    Route::get('showProfile',[ProfilesController::class ,'showProfile'])->middleware('auth:api');
 
     //Routes for getDateTime and showAllEvents
     Route::get('getDateTime',[EventsController::class ,'getDateTime']);

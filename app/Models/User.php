@@ -22,10 +22,13 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
-        'is_verified',
-        'device_token',
-        'accept_notification',
-        'profile_id',
+        'first_name', 
+        'father_name',
+        'last_name', 
+        'telegram',
+        'phone', 
+        'country',
+        'gender'
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -35,6 +38,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verified_at',
+        'is_verified',
+        'device_token',
+        'accept_notification',
     ];
 
     /**
@@ -74,10 +81,5 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->belongsToMany('App\Models\Notification');
-    }
-
-    public function profiles()
-    {
-        return $this->belongsTo(Profile::class, 'profile_id','id');
     }
 }

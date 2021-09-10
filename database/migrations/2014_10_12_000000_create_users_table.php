@@ -22,13 +22,15 @@ class CreateUsersTable extends Migration
             $table->integer('is_admin')->default('0');
             $table->longText('device_token')->nullable();       
             $table->integer('accept_notification')->default(1);            
-            $table->bigInteger('profile_id')->unsigned()->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('father_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('telegram')->unique()->nullable();
+            $table->string('phone')->unique()->nullable();
+            $table->string('country')->nullable();
+            $table->enum('gender',['male','female'])->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('profile_id')
-                ->references('id')->on('profiles')
-                ->onDelete('cascade');
         });
     }
 
