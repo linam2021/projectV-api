@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('is_verified')->nullable();
             $table->string('password');
             $table->integer('is_admin')->default('0');
-            $table->string('device_token')->nullable();
-            $table->string('accept_notification')->nullable();
+            $table->longText('device_token')->nullable();       
+            $table->integer('accept_notification')->default(1);            
             $table->bigInteger('profile_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
