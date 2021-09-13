@@ -24,6 +24,7 @@ class CreateExamsTable extends Migration
             //number of exam questions
             $table->integer('questions_count');
             $table->double('sucess_mark');
+            $table->double('maximum_mark');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->timestamps();
         });
