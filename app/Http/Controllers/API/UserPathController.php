@@ -81,14 +81,13 @@ class UserPathController extends BaseController
         try {
             $user = Auth::user();
             // If User Does Not Complete His Profile
-            if (!$user->first_name) {
+            if (!$user->first_name) 
                 return $this->sendError('Sorry, You Need To Complete Your Profile First');
-            }
             
             $pathsCount = $user->userPaths->count();
-            if ($pathsCount==0) {
+            if ($pathsCount==0) 
                 return $this->sendError('You Do Not Have Any Path Now');
-            }
+
             // States Of User (Accept, Wait, Reject, Exclude, Complete)           
             $userLastPath= $user->userPaths->last(); 
             //if ($userLastPath->path_start_date >= Carbon::yesterday()) { // yesterday just temporialy (Suppose to be time to start date event)
@@ -131,6 +130,68 @@ class UserPathController extends BaseController
             }else{
                 return $this ->sendResponse($UserPathLeaderboard,'Leader board is retrieved successfully');
             }
+        }catch (\Exception $exception){
+            return $this->sendError($exception->getMessage());
+        }
+    }
+
+    public function acceptUser(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+            ]);
+            if($validator->fails())
+                return $this->sendError($validator->errors());
+            $user = Auth::user();
+            if($user->is_admin !=1)
+                return $this->sendError('You must be admin to accept user');
+
+            $user_path = UserPath::where('user_id',$request->user_id)->orderByDesc('created_at')->first();
+            if(is_null($user_path))
+                return $this->sendError('This user does not join to any path');
+            else if($user_path->user_status==2)
+                return $this->sendError('This user is joined to path previously');
+            else if($user_path->user_status==1)    
+            {
+                UserPath::where('user_id',$request->user_id)
+                ->orderByDesc('created_at')
+                ->first()
+                ->update(['user_status' => 2,
+                         ]);
+                return $this ->sendResponse('Success','The user is joined to path');         
+            }    
+        }catch (\Exception $exception){
+            return $this->sendError($exception->getMessage());
+        }
+    }
+
+    public function rejectUser(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+            ]);
+            if($validator->fails())
+                return $this->sendError($validator->errors());
+            $user = Auth::user();
+            if($user->is_admin !=1)
+                return $this->sendError('You must be admin to accept user');
+
+            $user_path = UserPath::where('user_id',$request->user_id)->orderByDesc('created_at')->first();
+            if(is_null($user_path))
+                return $this->sendError('This user does not join to any path');
+            else if($user_path->user_status==2)
+                return $this->sendError('This user is joined to path previously');
+            else if($user_path->user_status==1)    
+            {
+                UserPath::where('user_id',$request->user_id)
+                ->orderByDesc('created_at')
+                ->first()
+                ->update(['user_status' => 3,
+                         ]);
+                return $this ->sendResponse('Success','The user is rejected from path');        
+            }    
         }catch (\Exception $exception){
             return $this->sendError($exception->getMessage());
         }

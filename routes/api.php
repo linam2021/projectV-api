@@ -57,6 +57,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('userpath/store', [UserPathController::class, 'store']);
     Route::get('userpath/show', [UserPathController::class, 'show']);
     Route::get('showUserPathLeaderboard', [UserPathController::class, 'showUserPathLeaderboard']);
+    Route::post('acceptUser', [UserPathController::class, 'acceptUser']);
+    Route::post('rejectUser', [UserPathController::class, 'rejectUser']);
 
 
     //Routes for getDateTime and showUserEvents
