@@ -115,5 +115,24 @@ class UserPathController extends BaseController
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
-    }    
+    }  
+    
+    public function showUserPathLeaderboard()
+    {
+        try{
+            $user = Auth::user();
+            //get user path
+            $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
+            if(is_null($user_path))
+                return $this->sendError('You do not have access to any path');
+            $UserPathLeaderboard = UserPath::where('path_id',$user_path->path_id)->where('user_status',2)->orderByDesc('score')->orderBy('created_at')->get();
+            if(!$user_path){
+                return $this ->sendError('There is no users in leader board');
+            }else{
+                return $this ->sendResponse($UserPathLeaderboard,'Leader board is retrieved successfully');
+            }
+        }catch (\Exception $exception){
+            return $this->sendError($exception->getMessage());
+        }
+    }
 }

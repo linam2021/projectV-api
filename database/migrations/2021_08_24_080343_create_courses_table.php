@@ -16,10 +16,11 @@ class CreateCoursesTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('path_id')->unsigned();
-            $table->string('course_name')->unique();
+            $table->string('course_name');
             $table->string('course_link');
             $table->integer('course_duration');
             $table->integer('stage');
+            $table->bigInteger('questionbank_course_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('path_id')->references('id')->on('paths')->onDelete('cascade');

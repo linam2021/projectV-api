@@ -19,6 +19,9 @@ class QuestionBankController extends BaseController
             if ($validator ->fails())
                 return $this->sendError($validator->errors());
             else{
+                $user=Auth::user();
+                if($user->is_admin !=1)
+                return $this->sendError('You must be admin to add get questionbank paths');
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
                 ])->post('http://gamequestionbank.herokuapp.com/api/showAllPaths', ['api_key' => $request->api_key])->json();
@@ -29,18 +32,21 @@ class QuestionBankController extends BaseController
         }
     }
 
-    public function showQuestionBankPathCourses(Request $request){
+    public function getQuestionBankPathCourses(Request $request){
         try {
             $validator = Validator::make($request->all(),[
                 'api_key' => 'required',
-                'path_id' =>'required',
+                'questionbank_path_id' =>'required',
             ]);
             if ($validator ->fails())
                 return $this->sendError($validator->errors());
             else{
+                $user=Auth::user();
+                if($user->is_admin !=1)
+                    return $this->sendError('You must be admin to add get questionbank path courses');
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post('http://gamequestionbank.herokuapp.com/api/showPathCourses', ['api_key' => $request->api_key,'path_id'=>$request->path_id])->json();
+                ])->post('http://gamequestionbank.herokuapp.com/api/showPathCourses', ['api_key' => $request->api_key,'path_id'=>$request->questionbank_path_id])->json();
                 return $response;
             }
         }catch (\Exception $exception){
@@ -52,7 +58,7 @@ class QuestionBankController extends BaseController
         try {
             $validator = Validator::make($request->all(),[
                 'api_key' => 'required',
-                'course_id' =>'required',
+                'questionbank_course_id' =>'required',
                 'question_count' =>'required',
                 'exam_id'=>'required'
             ]);
@@ -67,7 +73,7 @@ class QuestionBankController extends BaseController
                     return $this->sendError('Exam Questions are added previously');
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
-                ])->post('http://gamequestionbank.herokuapp.com/api/getRandomQuestions', ['api_key' => $request->api_key,'course_id'=>$request->course_id,'question_count'=>$request->question_count])->json();
+                ])->post('http://gamequestionbank.herokuapp.com/api/getRandomQuestions', ['api_key' => $request->api_key,'course_id'=>$request->questionbank_course_id,'question_count'=>$request->question_count])->json();
                 for($i=0; $i<count($response['data']);$i++)
                 {
                     $addPQues=Question::create([

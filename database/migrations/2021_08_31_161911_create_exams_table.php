@@ -15,6 +15,7 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->enum('exam_type',['theoretical','practical', 'practicalTheoretical']);
             $table->bigInteger('course_id')->unsigned();
             //date of starting an exam
             $table->dateTime('exam_start_date');

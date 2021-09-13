@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
-    protected $fillable=['user_id','event_name','event_data' ];
+    protected $fillable=['user_id','event_name','event_type','event_data','path_id'];
 
-    public function user(){
-
-        $this->belongsToMany(User::class ,'user_id');
-    }
 }

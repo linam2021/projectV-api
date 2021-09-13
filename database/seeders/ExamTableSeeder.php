@@ -18,6 +18,7 @@ class ExamTableSeeder extends Seeder
         $now = Carbon::now()->toDateTimeString();
         DB::table('exams')->insert([
             'course_id' => 1,
+            'exam_type'=>'theoretical',
             'exam_start_date' => $now,
             'exam_duration' => Carbon::parse('00:30:00')->format('H:i:s'),
             'questions_count'=>10,
@@ -27,6 +28,7 @@ class ExamTableSeeder extends Seeder
         ]);
         DB::table('exams')->insert([
             'course_id' => 2,
+            'exam_type'=>'theoretical',
             'exam_start_date' => $now,
             'exam_duration' => Carbon::parse('00:45:00')->format('H:i:s'),
             'questions_count'=>6,

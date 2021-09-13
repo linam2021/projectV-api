@@ -15,8 +15,9 @@ class CreatePathsTable extends Migration
     {
         Schema::create('paths', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('path_name')->unique();
+            $table->string('path_name');
             $table->integer('current_stage')->default(0);
+            $table->bigInteger('questionbank_path_id')->unsigned();
             $table->timestamps();
         });
     }

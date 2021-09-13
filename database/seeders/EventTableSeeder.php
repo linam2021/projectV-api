@@ -15,21 +15,39 @@ class EventTableSeeder extends Seeder
      */
     public function run()
     {
-        $now = Carbon::now()->toDateTimeString();
+        $now = Carbon::now();
+        $now2 = Carbon::now();
         DB::table('events')->insert([
-            'user_id' => 4,
-            'event_name' => 'start of Database path',
-            'event_data' => $now
+            'event_name' => 'database path start day',
+            'event_type' => 'path start',
+            'event_data'=>$now->toDateTimeString(),
+            'path_id' => 1,
+            'created_at' => $now->toDateTimeString(),
+            'updated_at' => $now->toDateTimeString()
         ]);
         DB::table('events')->insert([
-            'user_id' => 4,
-            'event_name' => 'start of Database path (stage 1)',
-            'event_data' => $now
+            'event_name' => 'database path exam day',
+            'event_type' => 'exam day',
+            'event_data'=>$now->addDays(12)->toDateTimeString(),
+            'path_id' => 1,
+            'created_at' => $now->toDateTimeString(),
+            'updated_at' => $now->toDateTimeString()
         ]);
         DB::table('events')->insert([
-            'user_id' => 5,
-            'event_name' => 'start of Flutter path',
-            'event_data' => $now
+            'event_name' => 'flutter path start day',
+            'event_type' => 'path start',
+            'event_data'=>$now2->toDateTimeString(),
+            'path_id' => 2,
+            'created_at' => $now2->toDateTimeString(),
+            'updated_at' => $now2->toDateTimeString()
+        ]);
+        DB::table('events')->insert([
+            'event_name' => 'flutter path exam day',
+            'event_type' => 'exam day',
+            'event_data'=>$now2->addDays(23)->toDateTimeString(),
+            'path_id' => 2,
+            'created_at' => $now2->toDateTimeString(),
+            'updated_at' => $now2->toDateTimeString()
         ]);
     }
 }

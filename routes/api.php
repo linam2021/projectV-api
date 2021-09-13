@@ -56,14 +56,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('paths', [PathController::class, 'index']);
     Route::post('userpath/store', [UserPathController::class, 'store']);
     Route::get('userpath/show', [UserPathController::class, 'show']);
+    Route::get('showUserPathLeaderboard', [UserPathController::class, 'showUserPathLeaderboard']);
 
-    //Routes for getDateTime and showAllEvents
-    Route::get('getDateTime',[EventsController::class ,'getDateTime']);
-    Route::get('showAllEvents',[EventsController::class ,'showAllEvents']);
+
+    //Routes for getDateTime and showUserEvents
+    Route::get('getDateTime',[UserEventsController::class ,'getDateTime']);
+    Route::get('showUserEvents',[UserEventsController::class ,'showUserEvents']);
 
     //Routes for QuestinBankController
     Route::post('getAllQuestionBankPaths',[QuestionBankController::class ,'getAllQuestionBankPaths']);
-    Route::post('showQuestionBankPathCourses',[QuestionBankController::class ,'showQuestionBankPathCourses']);
+    Route::post('getQuestionBankPathCourses',[QuestionBankController::class ,'getQuestionBankPathCourses']);
     Route::post('addExamQuestions',[QuestionBankController::class ,'addExamQuestions']);
     Route::post('getUserExamQuestions',[QuestionBankController::class ,'getUserExamQuestions']);
 
