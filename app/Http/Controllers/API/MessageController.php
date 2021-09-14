@@ -33,7 +33,7 @@ class MessageController extends BaseController
             $messageUser=MessageUser::where('user_id',$user->id)->where('message_id',$id)->first();
             if(is_null($messageUser))
                 return $this->sendError('you are not allowed ');
-            $message = Message::find($messageUser->message_id)->first();
+            $message = Message::where('id',$id)->first();
             if(is_null($message))
                 return $this->sendError('message not found');
             return $this->sendResponse($message,'message was retrieved successfully');
