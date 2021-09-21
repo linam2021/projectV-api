@@ -32,6 +32,7 @@ class HomeController extends Controller
               $pathsProgress = DB::table('paths')
               ->join('courses','paths.id', '=','courses.path_id')
                        ->select(DB::raw('(current_stage-1)*100/count(*) as course_stage_count, path_name'))
+                       ->where('current_stage','<>',0)
                        ->groupBy('path_name','current_stage')
                        ->orderby('course_stage_count')
                        ->get();              
