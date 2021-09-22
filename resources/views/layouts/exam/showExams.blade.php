@@ -7,7 +7,7 @@
             <div class="fs-4 fw-bold text-primary mb-1 py-3">
                 عرض الامتحانات 
             </div>
-            <div class="container-fluid"> 
+            <div class="table-responsive"> 
               @if($exams->count()>0)
               <table class="table table-secondary table-striped table-bordered">
                   <thead>

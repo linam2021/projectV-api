@@ -77,27 +77,27 @@
                     </div>
                  </div>
             @endforeach
-
-            @if($pathsProgress->count()>0)
-            <table class="table table-secondary table-striped table-bordered">
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col">اسم المسار</th>
-                        <th scope="col">نسبة التقدم </th>
-                        
-                    </tr>
-                </thead> 
-                <tbody>
-                    @foreach ($pathsProgress as $p)
-                        <tr class="table-light text-center">
-                                <td scope="row">{{$p->path_name}}</td>                             
-                                <td scope="row">%{{(int)$p->course_stage_count}}</td>                   
-                          </tr>                          
-                    @endforeach
-                </tbody>
-            </table>
-            </div>
-            @endif
+            <div class="table-responsive"> 
+                @if($pathsProgress->count()>0)
+                <table class="table table-secondary table-striped table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col">اسم المسار</th>
+                            <th scope="col">نسبة التقدم </th>
+                            
+                        </tr>
+                    </thead> 
+                    <tbody>
+                        @foreach ($pathsProgress as $p)
+                            <tr class="table-light text-center">
+                                    <td scope="row">{{$p->path_name}}</td>                             
+                                    <td scope="row">%{{(int)$p->course_stage_count}}</td>                   
+                            </tr>                          
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+                @endif
           </div>  
       </div>
   </div>         
