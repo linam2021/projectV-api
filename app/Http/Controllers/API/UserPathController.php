@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use App\Models\Exam;
 
 class UserPathController extends BaseController
 {
@@ -124,7 +126,13 @@ class UserPathController extends BaseController
             $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
             if(is_null($user_path))
                 return $this->sendError('You do not have access to any path');
-            $UserPathLeaderboard = UserPath::where('path_id',$user_path->path_id)->where('user_status',2)->orderByDesc('score')->orderBy('created_at')->get();
+
+            $UserPathLeaderboard= DB::table('user_path')
+                                    ->join('users','user_path.user_id', '=','users.id')
+                                    ->select('users.id','users.first_name','users.last_name', 'users.gender', 'user_path.path_id','user_path.score')
+                                    ->where('user_status',2)->
+                                    orderByDesc('score')->
+                                    orderBy('users.id')->get();  
             if(!$user_path){
                 return $this ->sendError('There is no users in leader board');
             }else{
