@@ -1,12 +1,10 @@
-@extends('layout.main')
+@extends('layouts.dashboard.pathDashboard')
 
 @php
     $i = 1;
 @endphp
 
-@section('title', 'المسارات')
-
-@section('content')
+@section('dashboard-content')
 <div class="container">
     <div class="row">
         @if ($message = Session::get('message'))
@@ -44,16 +42,16 @@
                         <td>{{$item->path_name}}</td>
                         <td>{{$item->current_stage}}</td>
                         <td>
-                            <a href="{{route('paths.currentusers', $item->id)}}" class="text-success"><span data-feather="eye"></span></a>
+                            <a href="{{route('paths.currentusers', $item->id)}}" class="text-success"><i class="fas fa-eye"></i></a>
                         </td>
                         <td>
-                            <a href="{{route('paths.currentexcludeuser', $item->id)}}" class="text-success"><span data-feather="eye"></span></a>
+                            <a href="{{route('paths.currentexcludeuser', $item->id)}}" class="text-danger"><i class="fas fa-eye"></i></a>
                         </td>
                         <td>
-                            <a href="{{route('paths.users', $item->id)}}" class="text-warning"><span data-feather="external-link"></span></a>
+                            <a href="{{route('paths.users', $item->id)}}" class="text-warning"><i class="fas fa-external-link-alt"></i></a>
                         </td>
                         <td>
-                            <a href="{{route('paths.excludeusers', $item->id)}}" class="text-warning"><span data-feather="external-link"></span></a>
+                            <a href="{{route('paths.excludeusers', $item->id)}}" class="text-info"><i class="fas fa-external-link-alt"></i></a>
                         </td>
                         <td>
                             <a href="{{route('paths.destroy', $item->id)}}" class="btn btn-danger">حذف</a>

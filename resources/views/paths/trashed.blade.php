@@ -1,12 +1,10 @@
-@extends('layout.main')
+@extends('layouts.dashboard.pathDashboard')
 
 @php
     $i = 1;
 @endphp
 
-@section('title', 'المسارات')
-
-@section('content')
+@section('dashboard-content')
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -32,10 +30,10 @@
                         <th scope="row">{{$item->questionbank_path_id}}</th>
                         <td>{{$item->path_name}}</td>
                         <td>
-                            <a href="{{route('paths.users', $item->id)}}" class="text-warning"><span data-feather="external-link"></span></a>
+                            <a href="{{route('paths.users', $item->id)}}" class="text-warning"><i class="fas fa-external-link-alt"></i></a>
                         </td>
                         <td>
-                            <a href="{{route('paths.excludeusers', $item->id)}}" class="text-warning"><span data-feather="external-link"></span></a>
+                            <a href="{{route('paths.excludeusers', $item->id)}}" class="text-info"><i class="fas fa-external-link-alt"></i></a>
                         </td>
                         <td>
                             <a href="{{route('paths.restore', $item->id)}}" class="btn btn-primary">استعادة</a>

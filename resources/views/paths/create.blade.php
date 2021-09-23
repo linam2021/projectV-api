@@ -1,8 +1,7 @@
-@extends('layout.main')
+@extends('layouts.dashboard.pathDashboard')
 
-@section('title', 'إنشاء المسار')
+@section('dashboard-content')
 
-@section('content')
 <div class="container">
     <div class="row">
         <div class="col-12">
