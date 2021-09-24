@@ -37,9 +37,9 @@
       </style>
 </head>
 <body>
-    <div id="app">
+    <div id="app"  class="container">
         <nav class="navbar navbar-expand-md shadow-sm navbar-dark bg-dark">
-            <div class="container-fluid">
+            <div class="container">
                 <a class="navbar-brand" href="#"><img src="{{asset('img/gameLogoWhite.png')}}" alt="The Game logo">
                     Project V
                 </a>
@@ -88,7 +88,7 @@
         @yield('content')
     </div>
     <!-- Footer -->
-    <div class="container-fluid mt-3">
+    <div class="container">
         <footer class="bg-dark text-center text-white bg-dark">
             <!-- Copyright -->
             <div class="text-center p-3">
