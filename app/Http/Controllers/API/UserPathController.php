@@ -124,15 +124,23 @@ class UserPathController extends BaseController
             $user = Auth::user();
             //get user path
             $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
+            $path=Path::where('id',$user_path->path_id)->first();
             if(is_null($user_path))
                 return $this->sendError('You do not have access to any path');
-
+            $currentPathTotalScore =DB::table('courses')
+                                ->join('exams','courses.id', '=','exams.course_id')
+                                ->where('courses.path_id',$user_path->path_id)
+                                ->whereBetween('courses.id', [1, $path->current_stage-1])
+                                ->sum('exams.maximum_mark');
+            
             $UserPathLeaderboard= DB::table('user_path')
                                     ->join('users','user_path.user_id', '=','users.id')
                                     ->select('users.id','users.first_name','users.last_name', 'users.gender', 'user_path.path_id','user_path.score')
-                                    ->where('user_status',2)->
-                                    orderByDesc('score')->
-                                    orderBy('users.id')->get();  
+                                    ->where('user_status',2)
+                                    ->orderByDesc('score')
+                                    ->orderBy('users.id')->take(300)->get();
+            foreach($UserPathLeaderboard as $userP)               
+                $userP->score =round($userP->score*100/$currentPathTotalScore);
             if(!$user_path){
                 return $this ->sendError('There is no users in leader board');
             }else{
