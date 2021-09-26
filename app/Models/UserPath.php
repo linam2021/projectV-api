@@ -23,7 +23,17 @@ class UserPath extends Model
     protected function setKeysForSaveQuery($query)
     {
         return $query->where('user_id', $this->getAttribute('user_id'))
-                     ->where('path_id', $this->getAttribute('path_id'))
-                     ->where('path_start_date', $this->getAttribute('path_start_date'));
+            ->where('path_id', $this->getAttribute('path_id'))
+            ->where('path_start_date', $this->getAttribute('path_start_date'));
+    }
+
+    /**
+     * Get the user that owns the UserPath
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
