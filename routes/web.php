@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\WEB\PraticalResultsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +27,7 @@ Route::get('/home', [App\Http\Controllers\web\HomeController::class, 'index'])->
 Route::get('/showExams', [App\Http\Controllers\web\ExamController::class, 'showExams'])->name('showExams');
 
 
+// Path
+Route::get('praticalresults', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
+
+Route::post('praticalresults/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
