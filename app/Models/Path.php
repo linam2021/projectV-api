@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Path extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $fillable = ['path_name','current_stage'];
+    protected $fillable = ['path_name', 'current_stage', 'questionbank_path_id'];
 
     protected $hidden = ['created_at', 'updated_at', 'pivot'];
 

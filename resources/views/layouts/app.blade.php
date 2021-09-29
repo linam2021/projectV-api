@@ -28,7 +28,7 @@
           -moz-user-select: none;
           user-select: none;
         }
-  
+
         @media (min-width: 768px) {
           .bd-placeholder-img-lg {
             font-size: 3.5rem;
@@ -37,7 +37,7 @@
       </style>
 </head>
 <body>
-    <div id="app" class="container" >
+    <div id="app"  class="container">
         <nav class="navbar navbar-expand-md shadow-sm navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="#"><img src="{{asset('img/gameLogoWhite.png')}}" alt="The Game logo">
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </nav>
-        @yield('content')     
+        @yield('content')
     </div>
     <!-- Footer -->
     <div class="container">
