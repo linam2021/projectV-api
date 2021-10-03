@@ -47,7 +47,7 @@ Auth::routes();
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 
 
-// Path
-Route::get('praticalresults', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
+// Exams Pratical Results
+Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
 
-Route::post('praticalresults/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
+Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
