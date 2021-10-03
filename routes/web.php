@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WEB\PraticalResultsController;
 use App\Http\Controllers\WEB\PathController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +45,9 @@ Auth::routes();
 
 // Login page
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
+
+
+// Exams Pratical Results
+Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
+
+Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
