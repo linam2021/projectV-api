@@ -111,13 +111,38 @@ class UserPathController extends BaseController
                         $path = Path::find($path_id);
                         return $this->sendResponse($path, 'Congratulations, You Are Completed The Path Successfully');
                     default:
-                        return $this->sendError('You Do Not Have Paths');
+                        return $this->sendError('You Do Not Have Any Path Now');
                 }            
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }  
     
+    public function getHeroesCountByType()
+    {
+        try {
+            $user = Auth::user();
+           
+            $pathsCount = $user->userPaths->count();
+            if ($pathsCount==0) 
+                return $this->sendError('You Do Not Have Any Path Now');
+            //get user path
+            $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
+            if(is_null($user_path))
+                return $this->sendError('You do not have access to any path');
+             
+            $progressiveCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',2)->count();
+
+            $excludedHeroesCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',4)->count();
+            return $this->sendResponse([
+                                'progressiveCount' => $progressiveCount,
+                                'ExcludedCount' => $excludedHeroesCount
+            ], 'progressive and Excluded Heroes Count is registered successfully');            
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage());
+        }
+    }
+        
     public function showUserPathLeaderboard()
     {
         try{

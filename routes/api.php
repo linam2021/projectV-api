@@ -54,8 +54,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Routes For Path (Show All, Store A Path, Show Current A Path)
     Route::get('paths', [PathController::class, 'index']);
+    Route::get('comingpaths', [PathController::class, 'showComingPaths']);
     Route::post('userpath/store', [UserPathController::class, 'store']);
     Route::get('userpath/show', [UserPathController::class, 'show']);
+    Route::get('getHeroesCountByType', [UserPathController::class, 'getHeroesCountByType']);
     Route::get('showUserPathLeaderboard', [UserPathController::class, 'showUserPathLeaderboard']);
     Route::post('acceptUser', [UserPathController::class, 'acceptUser']);
     Route::post('rejectUser', [UserPathController::class, 'rejectUser']);

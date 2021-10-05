@@ -32,15 +32,17 @@ class PathTableSeeder extends Seeder
         ]);
         DB::table('paths')->insert([
             'path_name' => 'Design',
-            'current_stage' => 1,
+            'current_stage' => 0,
             'questionbank_path_id'=>3,
+            'path_start_date'=>Carbon::parse(Carbon::now()->addDays(10))->format('Y-m-d'),
             'created_at' => $now,
             'updated_at' => $now
         ]);
         DB::table('paths')->insert([
             'path_name' => 'Web',
-            'current_stage' => 1,
+            'current_stage' => 0,
             'questionbank_path_id'=>4,
+            'path_start_date'=>Carbon::parse(Carbon::now()->addDays(5))->format('Y-m-d'),
             'created_at' => $now,
             'updated_at' => $now
         ]);
