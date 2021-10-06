@@ -62,7 +62,7 @@ class UserTableSeeder extends Seeder
             'updated_at' => $now
         ]);
         DB::table('users')->insert([
-            'email' => 'email6@example.com',
+            'email' => 'user3@example.com',
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
             'is_verified'=>1,
