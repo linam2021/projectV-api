@@ -20,7 +20,7 @@ class CreateExamsTable extends Migration
             //date of starting an exam
             $table->dateTime('exam_start_date');
             //duration of an exam
-            $table->time('exam_duration');
+            $table->integer('exam_duration');
             //number of exam questions
             $table->integer('questions_count');
             $table->double('sucess_mark');
