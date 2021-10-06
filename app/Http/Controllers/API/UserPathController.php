@@ -118,7 +118,7 @@ class UserPathController extends BaseController
         }
     }  
     
-    public function getHeroesCountByType()
+    public function showUserPathInfo()
     {
         try {
             $user = Auth::user();
@@ -128,21 +128,46 @@ class UserPathController extends BaseController
                 return $this->sendError('You Do Not Have Any Path Now');
             //get user path
             $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
+            $path=Path::where('id',$user_path->path_id)->first();
             if(is_null($user_path))
                 return $this->sendError('You do not have access to any path');
-             
+            $userId=Auth::id();
+            $rank = DB::table('user_path')->where('path_start_date',$path->path_start_date)->whereNotNull('path_start_date')->where('user_status',2)->orderByDesc('score')->orderBy('user_id')->get();
+            $position = $rank->search(function ($cha) use ($userId) {
+                return $cha->user_id == $userId;
+            });    
+
             $progressiveCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',2)->count();
 
             $excludedHeroesCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',4)->count();
+
+            if ($path->current_stage==1)
+                $score =0;
+            else {
+                $currentPathTotalScore =DB::table('courses')
+                                ->join('exams','courses.id', '=','exams.course_id')
+                                ->where('courses.path_id',$user_path->path_id)
+                                ->whereBetween('courses.id', [1, $path->current_stage-1])
+                                ->sum('exams.maximum_mark');
+                $score=round($user_path->score*100/$currentPathTotalScore);
+            }                   
             return $this->sendResponse([
+                                'user_id' =>$user->id,
+                                'first_name' => $user->first_name,
+                                'father_name' => $user->father_name,
+                                'last_name' => $user->last_name,
+                                'gender' =>$user->gender,
+                                'rank' => $position + 1,
+                                'score' =>$score,
+                                'repeat_chance_no' => $user_path->repeat_chance_no,
+                                'current_stage'=>$path->current_stage,
                                 'progressiveCount' => $progressiveCount,
                                 'ExcludedCount' => $excludedHeroesCount
-            ], 'progressive and Excluded Heroes Count is registered successfully');            
+            ], 'User Path Info is retrieved successfully');            
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }
-        
     public function showUserPathLeaderboard()
     {
         try{
@@ -164,8 +189,13 @@ class UserPathController extends BaseController
                                     ->where('user_status',2)
                                     ->orderByDesc('score')
                                     ->orderBy('users.id')->take(300)->get();
-            foreach($UserPathLeaderboard as $userP)               
-                $userP->score =round($userP->score*100/$currentPathTotalScore);
+            foreach($UserPathLeaderboard as $userP)
+            {    
+                if ($path->current_stage==1) 
+                    $userP->score =0;
+                else
+                    $userP->score =round($userP->score*100/$currentPathTotalScore);
+            }
             if(!$user_path){
                 return $this ->sendError('There is no users in leader board');
             }else{
