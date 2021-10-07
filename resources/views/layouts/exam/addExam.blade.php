@@ -4,7 +4,7 @@
   <div>
     <div class="card border-left-success shadow h-100">
         <div class="card-body">               
-            <div class="fs-3 fw-bold text-primary mb-1 py-3">
+            <div class="fs-4 fw-bold text-primary mb-1 py-3">
               إضافة امتحان
             </div>
             

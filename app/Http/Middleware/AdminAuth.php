@@ -20,7 +20,8 @@ class AdminAuth
         if (Auth::guard('web')->check() && $request->user()->is_admin === 1) {
             return $next($request);
         } else {
-            return redirect()->route('login');
+            auth()->logout();
+            return redirect()->route('login')->with('error' , 'يجب أن تكون مديراً لتتمكن من تسجيل الدخول إلى الموقع');
         }
     }
 }
