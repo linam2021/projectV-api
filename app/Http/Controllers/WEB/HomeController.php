@@ -35,7 +35,6 @@ class HomeController extends Controller
                        ->where('current_stage','>',0)
                        ->groupBy('path_name','current_stage')
                        ->orderbyDESC('path_progress')
-                       ->orderby('paths.id')
                        ->get();              
               return view('layouts.home')->with(['userCount'=>$userCount, 'adminCount'=> $adminCount, 'openPathCount'=>$openPathCount, 'pathsProgress'=>$pathsProgress]);
              } catch (\Throwable $th) {
