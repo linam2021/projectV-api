@@ -165,10 +165,10 @@ class UserPathController extends BaseController
                 ->first(); // there can be duplicate file names!
             // Stream the file to the browser...
             $readStream = Storage::disk('google')->getDriver()->readStream($file['path']);
-            $targetFile = public_path("downloaded-{$filename}");
+            $targetFile = public_path("{$filename}");
             file_put_contents($targetFile, stream_get_contents($readStream), FILE_APPEND);
             //$targetFile=str_replace("\\", "/", $targetFile);
-            $targetFile=env('APP_URL')."downloaded-{$filename}";
+            $targetFile=env('APP_URL')."{$filename}";
             return $this->sendResponse([
                                 'user_id' =>$user->id,
                                 'first_name' => $user->first_name,
