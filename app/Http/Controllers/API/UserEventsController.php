@@ -17,7 +17,7 @@ class UserEventsController extends BaseController
     public function getDateTime() 
     {
         try{
-            $dateTime=Carbon::now("Europe/Berlin");
+            $dateTime=Carbon::now()->addHour();
             return $this ->sendResponse($dateTime,'DateTime is retrieved successfully');
         }catch (\Exception $exception){
             return $this->sendError($exception->getMessage());

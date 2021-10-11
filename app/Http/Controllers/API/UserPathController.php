@@ -207,6 +207,7 @@ class UserPathController extends BaseController
                                     ->join('users','user_path.user_id', '=','users.id')
                                     ->select('users.id','users.first_name','users.last_name', 'users.gender', 'user_path.path_id','user_path.score')
                                     ->where('user_status',2)
+                                    ->where('user_path.path_id',$user_path->path_id)
                                     ->orderByDesc('score')
                                     ->orderBy('users.id')->take(300)->get();
             foreach($UserPathLeaderboard as $userP)
