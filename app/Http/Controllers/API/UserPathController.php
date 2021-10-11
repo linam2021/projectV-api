@@ -167,7 +167,8 @@ class UserPathController extends BaseController
             $readStream = Storage::disk('google')->getDriver()->readStream($file['path']);
             $targetFile = public_path("downloaded-{$filename}");
             file_put_contents($targetFile, stream_get_contents($readStream), FILE_APPEND);
-            $targetFile=str_replace("\\", "/", $targetFile);
+            //$targetFile=str_replace("\\", "/", $targetFile);
+            $targetFile=env('APP_URL')."downloaded-{$filename}";
             return $this->sendResponse([
                                 'user_id' =>$user->id,
                                 'first_name' => $user->first_name,
