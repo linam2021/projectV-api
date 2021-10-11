@@ -11,7 +11,7 @@ class Path extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['path_name', 'current_stage', 'questionbank_path_id','path_start_date'];
+    protected $fillable = ['path_name', 'current_stage', 'questionbank_path_id','path_start_date','path_image_name'];
 
     protected $hidden = ['created_at', 'updated_at','deleted_at','pivot'];
 

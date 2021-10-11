@@ -19,6 +19,7 @@ class CreatePathsTable extends Migration
             $table->integer('current_stage')->default(0);
             $table->bigInteger('questionbank_path_id')->unsigned();
             $table->date('path_start_date')->nullable();
+            $table->string('path_image_name')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -20,16 +20,20 @@
                 @endif 
                 <div class="row align-items-center">
                     <label for="pathname" class="form-label"> اسم المسار في موقع بنك الأسئلة</label>
-                    <div class="col-md-10 mr-2">                        
+                    <div class="col-md-12 mr-2">                        
                         <select class="form-select" name =idBankPath aria-label="Default select example" >
                             @for ($i =0 ; $i<count($questionBankPaths['data']); $i++)
                                 <option value="{{$questionBankPaths['data'][$i]['id']}}">{{$questionBankPaths['data'][$i]['path_name']}}</option>
                             @endfor
                         </select>
                     </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">إضافة</button>
-                    </div>
+                    <div class="col-md-12 mr-2"> 
+                        <label for="formFile" class="form-label">صورة المسار</label>
+                        <input class="form-control" type="file" name="path_image">
+                    </div> 
+                </div>
+                <div class="col-md-12 text-center my-3">
+                    <button type="submit" class="btn btn-primary">إضافة</button>
                 </div>
             </form>
           </div>

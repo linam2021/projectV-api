@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Exam;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class UserPathController extends BaseController
 {
@@ -123,8 +125,8 @@ class UserPathController extends BaseController
         try {
             $user = Auth::user();
            
-            $pathsCount = $user->userPaths->count();
-            if ($pathsCount==0) 
+            $Inpath = $user->userPaths->where('user_status',2)->count();
+            if ($Inpath==0) 
                 return $this->sendError('You Do Not Have Any Path Now');
             //get user path
             $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
@@ -150,7 +152,22 @@ class UserPathController extends BaseController
                                 ->whereBetween('courses.id', [1, $path->current_stage-1])
                                 ->sum('exams.maximum_mark');
                 $score=round($user_path->score*100/$currentPathTotalScore);
-            }                   
+            } 
+            $filename=$path->path_image_name;
+            $dir = '/';
+            $recursive = false; // Get subdirectories also?
+            $contents = collect(Storage::disk('google')->listContents($dir, $recursive));    
+            // Get file details...
+            $file = $contents
+                ->where('type', '=', 'file')
+                ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+                ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+                ->first(); // there can be duplicate file names!
+            // Stream the file to the browser...
+            $readStream = Storage::disk('google')->getDriver()->readStream($file['path']);
+            $targetFile = public_path("downloaded-{$filename}");
+            file_put_contents($targetFile, stream_get_contents($readStream), FILE_APPEND);
+            $targetFile=str_replace("\\", "/", $targetFile);
             return $this->sendResponse([
                                 'user_id' =>$user->id,
                                 'first_name' => $user->first_name,
@@ -162,12 +179,14 @@ class UserPathController extends BaseController
                                 'repeat_chance_no' => $user_path->repeat_chance_no,
                                 'current_stage'=>$path->current_stage,
                                 'progressiveCount' => $progressiveCount,
-                                'ExcludedCount' => $excludedHeroesCount
+                                'ExcludedCount' => $excludedHeroesCount,
+                                'path_image_url'=> $targetFile
             ], 'User Path Info is retrieved successfully');            
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }
+    
     public function showUserPathLeaderboard()
     {
         try{
