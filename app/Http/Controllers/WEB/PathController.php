@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class PathController extends Controller
 {
@@ -58,9 +61,13 @@ class PathController extends Controller
     {
         try
         {
-            $this->validate($request, [
-                'idBankPath' => 'required'
+            $validate = Validator::make($request->all(), [
+                'idBankPath' => 'required',
+                'path_image' =>'required'
             ]);
+            if ($validate->fails()) {
+                return redirect()->intended('paths/create')->with('error', $validate->errors());
+            }
             //Get paths from QuestionBank API
             $questionBankPaths = Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -74,17 +81,25 @@ class PathController extends Controller
             $frequentPath =Path::where('path_name',$path_name)->first();
             if(is_null($frequentPath))
             {
+                $newImageName=time() . '-' . $request->path_image->getClientOriginalName();
+                $request->path_image->move(public_path("/"),$newImageName);
+                $filename = $newImageName;   
+                $filePath = public_path($filename);
+                $fileData = File::get($filePath);
+                Storage::disk('google')->put($filename, $fileData);
                 Path::create([
                     'path_name' => $path_name,
                     'questionbank_path_id' => $request->idBankPath,
+                    'path_image_name' =>$newImageName,
                 ]);
                 return redirect()->intended('paths/create')->with('success', 'تم إضافة المسار بنجاح');
             }                   
             else
                 return redirect()->intended('paths/create')->with(['questionBankPaths'=>$questionBankPaths])->with('error','تم إضافة هذا المسار سابقاً') ; 
         
-        } catch (\Throwable $th) {   
-            return redirect()->intended('paths/create')->with(['questionBankPaths'=>$questionBankPaths])->with('error',$th->getMessage()) ; 
+        } catch (\Throwable $th) { 
+            dd($th->getMessage());  
+           // return redirect()->intended('paths/create')->with(['questionBankPaths'=>$questionBankPaths])->with('error',$th->getMessage()) ; 
         }
     }
 

@@ -75,3 +75,12 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
 Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
 
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
+
+Route::get('put11', function() {
+    $filename = 'database&api.jpg';
+    $filePath = public_path($filename);
+    $fileData = File::get($filePath);
+
+    Storage::disk('google')->put($filename, $fileData);
+    return 'File was saved to Google Drive';
+});
