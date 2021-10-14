@@ -49,6 +49,13 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('password'),
             'is_verified'=>1,
 	        'is_admin'=>0,
+            'first_name'=>'Ahmad', 
+            'father_name'=>'m',
+            'last_name'=>'Ali', 
+            'telegram'=>'tel1',
+            'phone'=>'1234567', 
+            'country'=>'xyz',
+            'gender'=>'male',
             'created_at' => $now,
             'updated_at' => $now
         ]);
@@ -58,6 +65,13 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('password'),
             'is_verified'=>1,
 	        'is_admin'=>0,
+            'first_name'=>'Mona', 
+            'father_name'=>'s',
+            'last_name'=>'Samer', 
+            'telegram'=>'tel2',
+            'phone'=>'12345678', 
+            'country'=>'xyz',
+            'gender'=>'female',
             'created_at' => $now,
             'updated_at' => $now
         ]);
@@ -67,6 +81,13 @@ class UserTableSeeder extends Seeder
             'password' => bcrypt('password'),
             'is_verified'=>1,
 	        'is_admin'=>0,
+            'first_name'=>'Rana', 
+            'father_name'=>'H',
+            'last_name'=>'Maher', 
+            'telegram'=>'tel3',
+            'phone'=>'12345689', 
+            'country'=>'xyz',
+            'gender'=>'female',
             'created_at' => $now,
             'updated_at' => $now
         ]);
