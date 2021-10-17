@@ -6,6 +6,7 @@ use App\Http\Controllers\WEB\PathController;
 use App\Http\Controllers\WEB\ExamController;
 use App\Http\Controllers\WEB\CourseController;
 use App\Http\Controllers\WEB\PraticalResultsController;
+use App\Http\Controllers\WEB\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,10 +33,10 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 // Routes Access Just From Admin
 Route::group(['middleware' => ['admin', 'auth']], function () {
 
-     // Home Route
-     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Home Route
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // Paths Routes     
+    // Paths Routes
     Route::get('/allpaths', [PathController::class, 'allwithTrashed'])->name('paths.allwithTrashed');
     Route::get('/paths/create', [PathController::class, 'create'])->name('path.create');
     Route::post('/paths/store', [PathController::class, 'store'])->name('path.store');
@@ -49,9 +50,9 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/courses/{id}', [CourseController::class, 'index'])->name('course.index');
     Route::get('/courses/create/{id}', [CourseController::class, 'create'])->name('course.create');
     Route::post('/courses/store/{id}/{qbid}', [CourseController::class, 'store'])->name('course.store');
-    
 
-    
+
+
     Route::get('/paths', [PathController::class, 'index'])->name('paths.index');
     Route::get('/paths/trashed', [PathController::class, 'trashed'])->name('paths.trashed');
     Route::get('/paths/{id}/currentusers/', [PathController::class, 'currentUsersPath'])->name('paths.currentusers');
@@ -69,7 +70,7 @@ Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->
 
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
 
-Route::get('put11', function() {
+Route::get('put11', function () {
     $filename = 'database&api.jpg';
     $filePath = public_path($filename);
     $fileData = File::get($filePath);
@@ -77,3 +78,10 @@ Route::get('put11', function() {
     Storage::disk('google')->put($filename, $fileData);
     return 'File was saved to Google Drive';
 });
+
+// statistics
+Route::get('/users/continue/{id}', [StatisticsController::class, 'usersContinue']);
+Route::get('/users/applicants/{id}', [StatisticsController::class, 'usersApplicants']);
+Route::get('/users/excludes/{id}', [StatisticsController::class, 'usersExcludes']);
+Route::get('/users/answers/{id}', [StatisticsController::class, 'usersAnwsers']);
+Route::get('/paths/leaderboard/{id}', [StatisticsController::class, 'leaderboard']);
