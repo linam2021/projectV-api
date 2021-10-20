@@ -22,10 +22,12 @@
                       <thead>
                           <tr class="text-center">
                               <th scope="col">الرقم</th>
-                              <th scope="col">اسم المسار </th>
-                              <th scope="col">تاريخ بداية المسار</th>
-                              <th scope="col">المرحلة الحالية </th>
-                              <th scope="col">البدء والقبول </th>
+                              <th scope="col" class="text-nowrap">اسم المسار </th>
+                              <th scope="col" class="text-nowrap" >صورة المسار </th>
+                              <th scope="col" class="text-nowrap">تاريخ البدء بالمسار</th>
+                              <th scope="col" class="text-nowrap">المرحلة الحالية </th>
+                              <th scope="col" class="text-nowrap">البدء بالمسار </th>
+                              <th scope="col" class="text-nowrap">القبول بالمسار </th>
                               <th scope="col">المراحل</th>
                               <th scope="col">حذف</th>
                           </tr>
@@ -35,6 +37,7 @@
                               <tr class="table-light text-center">
                                 <td scope="row">{{$path->id}}</td>
                                 <td scope="row">{{$path->path_name}}</td>
+                                <td scope="row"><a href={{route('loadImage',['name'=>$path->path_image_name])}} class="link-primary">Link</a></td>
                                 <td scope="row">{{$path->path_start_date}}</td>
                                 <td scope="row">
                                   @if (($path->current_stage==0) and ($path->path_start_date==null)and (!$path->hasCourses))
@@ -48,7 +51,7 @@
                                   @elseif ($path->current_stage>0)  
                                       {{$path->current_stage}}
                                   @endif    
-                                </td>  
+                                </td> 
                                 <td scope="row" class="text-nowrap">
                                   @if (($path->current_stage==0) and ($path->path_start_date==null)and (!$path->hasCourses))
                                       {{-- do nothing --}}
@@ -63,6 +66,13 @@
                                   @elseif (($path->current_stage==-1))   
                                     <div class="col">
                                         <a  class="text-sucess" href="{{route('path.startPath',['id'=>$path->id])}}">البدء بالمسار </a>                          
+                                    </div>
+                                  @endif   
+                                </td> 
+                                <td scope="row">
+                                  @if ($path->current_stage==-2)  
+                                    <div class="col">
+                                      <a  class="text-sucess" href="{{route('path.applicantsUsers',['id'=>$path->id])}}">القبول  </a>                          
                                     </div>
                                   @endif   
                                 </td> 

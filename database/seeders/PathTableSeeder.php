@@ -19,7 +19,7 @@ class PathTableSeeder extends Seeder
         DB::table('paths')->insert([
             'path_name' => 'Database',
             'current_stage' => 2,
-            'questionbank_path_id'=>1,
+            'questionbank_path_id'=>100,
             'path_image_name'=>'database&api.jpg',
             'created_at' => $now,
             'updated_at' => $now
@@ -27,7 +27,7 @@ class PathTableSeeder extends Seeder
         DB::table('paths')->insert([
             'path_name' => 'Flutter',
             'current_stage' => 1,
-            'questionbank_path_id'=>2,
+            'questionbank_path_id'=>200,
             'created_at' => $now,
             'path_image_name'=>'flutter.jpg',
             'updated_at' => $now
@@ -35,7 +35,7 @@ class PathTableSeeder extends Seeder
         DB::table('paths')->insert([
             'path_name' => 'design',
             'current_stage' => 0,
-            'questionbank_path_id'=>3,
+            'questionbank_path_id'=>300,
             'path_start_date'=>Carbon::parse(Carbon::now()->addDays(10))->format('Y-m-d'),
             'path_image_name'=>'Design.jpg',
             'created_at' => $now,
@@ -44,7 +44,7 @@ class PathTableSeeder extends Seeder
         DB::table('paths')->insert([
             'path_name' => 'Web',
             'current_stage' => 0,
-            'questionbank_path_id'=>4,
+            'questionbank_path_id'=>400,
             'path_start_date'=>Carbon::parse(Carbon::now()->addDays(5))->format('Y-m-d'),
             'path_image_name'=>'web.jpg',
             'created_at' => $now,
