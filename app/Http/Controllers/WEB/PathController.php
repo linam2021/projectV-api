@@ -215,19 +215,19 @@ class PathController extends Controller
     public function acceptUsers(Request $request, $id, $count)
     {
         try
-        {
-             
+        {            
             $input = $request->all();
             $validator = Validator::make($input,[
-                'acceptUsersCount'=>'required|min:1'
+                'acceptUsersCount'=>'required'
             ]);
-            if( $validator->fails()) {
+            if( $validator->fails()) 
                 return redirect()->back()->withErrors($validator);
-            }
+            else if ($count<=0) 
+                return redirect()->back()->with('error','لا يوجد منضمين إلى المسار');   
+            else if($input['acceptUsersCount']<=0)
+                return redirect()->back()->with('error','يجب أن يكون العدد الأعظمي للمقبولين أكبر من الصفر ');
             else if($input['acceptUsersCount']>$count)
-            {
                 return redirect()->back()->with('error','يجب أن يكون العدد الأعظمي للمقبولين في المسار أصغر من أو يساوي '.$count);
-            }
             else
             {
                 $userpath=DB::table('user_path')
@@ -264,7 +264,7 @@ class PathController extends Controller
                 Mail::send('Mails.rejectEmail',[], function ($message) use ($rejectedUsersEmails) {
                     $message->bcc($rejectedUsersEmails);
                     $message->subject('Reject Email');
-            }); 
+                }); 
                 $path=Path::where('id',$id)->update(['current_stage' => -1]);
                 return redirect()->intended('/allpaths')->with('success', 'تم قبول العدد المطلوب بالمسار بنجاح');      
             }
