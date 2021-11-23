@@ -29,6 +29,12 @@
                       <i class="fa fa-plus"></i>&nbsp; إضافة مسار
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('paths.openedPaths') }}">
+                      <span data-feather="home"></span>
+                      <i class="fa fa-tasks"></i>&nbsp; متابعة المسارات المفتوحة
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -49,19 +55,7 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">
                       <span data-feather="home"></span>
-                      <i class="fa fa-plus"></i>&nbsp;إضافة امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
                       <i class="fa fa-exchange-alt"></i>&nbsp;تعديل موعد امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-question"></i>&nbsp;إضافة أسئلة لمرحلة محددة
                     </a>
                   </li>
                   <li class="nav-item">

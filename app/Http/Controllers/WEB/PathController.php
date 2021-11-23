@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Path;
 use App\Models\Course;
 use App\Models\UserPath;
+use App\Models\User;
+use App\Models\Exam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +15,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class PathController extends Controller
 {
@@ -39,6 +43,31 @@ class PathController extends Controller
         }catch (\Throwable $th) { 
             dd($th->getMessage())  ;         
         }
+    }
+
+    public function loadPathImage($name)
+    {
+        $filename = $name;
+        
+        $dir = '/';
+        $recursive = false; // Get subdirectories also?
+        $contents = collect(Storage::disk('google')->listContents($dir, $recursive));    
+        // Get file details...
+        $file = $contents
+            ->where('type', '=', 'file')
+            ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+            ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+            ->first(); // there can be duplicate file names!    
+       
+        // Stream the file to the browser...
+        $readStream = Storage::disk('google')->getDriver()->readStream($file['path']);
+    
+        return response()->stream(function () use ($readStream) {
+            fpassthru($readStream);
+        }, 200, [
+            'Content-Type' => $file['mimetype'],
+            //'Content-disposition' => 'attachment; filename="'.$filename.'"', // force download?
+        ]);
     }
 
     // Show Create Page
@@ -86,7 +115,7 @@ class PathController extends Controller
                 $filename = $newImageName;   
                 $filePath = public_path($filename);
                 $fileData = File::get($filePath);
-                Storage::disk('google')->put($filename, $fileData);
+                //Storage::disk('google')->put($filename, $fileData);
                 Path::create([
                     'path_name' => $path_name,
                     'questionbank_path_id' => $request->idBankPath,
@@ -100,6 +129,31 @@ class PathController extends Controller
         } catch (\Throwable $th) { 
             dd($th->getMessage());  
            // return redirect()->intended('paths/create')->with(['questionBankPaths'=>$questionBankPaths])->with('error',$th->getMessage()) ; 
+        }
+    }
+
+    // Show opened Paths 
+    public function openedPaths()
+    {
+        try 
+        {
+            $paths = Path::orderBy('id')->where('current_stage','>',0)->get();
+            foreach ($paths as $p)
+            {
+                $course=Course::where('path_id',$p->id)->where('stage',$p->current_stage)->first();
+                $p->course_name=$course->course_name;
+                $p->course_start_date= $course->course_start_date;
+                $p->course_end_date= Carbon::createFromFormat('Y-m-d H:i', $course->course_start_date.' 00:00')->addDays($course->course_duration)->format('Y-m-d');
+                $exam=Exam::where('course_id',$course->id)->orderByDesc('id')->first();
+                $p->exam_type=$exam->exam_type;
+                $p->exam_start_date=Carbon::createFromFormat('Y-m-d H:i:s', $exam->exam_start_date)->format('Y-m-d');
+                if (( Carbon::parse($p->exam_start_date)->format('Y-m-d') <=  Carbon::parse(Carbon::now()->addDays(1))->format('Y-m-d')) && ($course->exam_repeated ==0))
+                
+                $p->has_repeat_exam = 1;//Carbon::parse($p->exam_start_date)->format('Y-m-d').'<='. Carbon::parse(Carbon::now()->addDays(1))->format('Y-m-d');
+            }
+            return view('layouts.path.trackpaths')->with(['paths'=>$paths]);
+        }catch (\Throwable $th) { 
+            dd($th->getMessage())  ;         
         }
     }
 
@@ -130,6 +184,10 @@ class PathController extends Controller
             Path::where('id',$id)
                     ->update(['path_start_date' => Carbon::parse($request->startDate)->format('Y-m-d') 
                              ]); 
+            Course::where('path_id',$id)
+                   ->where('stage',1)
+                   ->update(['course_start_date' => Carbon::parse($request->startDate)->format('Y-m-d') 
+                            ]);                  
             return redirect()->intended('/allpaths')->with('success', 'تم تحديد موعد البدء بالمسار بنجاح');  
         }catch (\Throwable $th) { 
             dd($th->getMessage())  ;         
@@ -141,9 +199,23 @@ class PathController extends Controller
         try
         {
             Path::where('id',$id)
-                    ->update(['current_stage' =>-1 
+                    ->update(['current_stage' =>-3 
                              ]); 
             return redirect()->intended('/allpaths')->with('success', 'تم إنهاء التسجيل على المسار بنجاح');  
+        }catch (\Throwable $th) { 
+            dd($th->getMessage())  ;         
+        }
+    }
+
+    public function examPreparation($id)
+    {
+        try
+        {
+            $path=Path::where('id',$id)->first(); 
+            $course= course::where('path_id',$id)
+                            ->where('stage',$path->current_stage)
+                            ->first();
+            return view('layouts.exam.addExam')->with(['course_id'=>$id]);  
         }catch (\Throwable $th) { 
             dd($th->getMessage())  ;         
         }
@@ -154,7 +226,7 @@ class PathController extends Controller
         try
         {
             $path=Path::where('id',$id)->first();
-            if ( Carbon::parse($path->path_start_date)->format('Y-m-d') !=  Carbon::parse(Carbon::now())->format('Y-m-d'))
+            if (Carbon::parse($path->path_start_date)->format('Y-m-d') !=  Carbon::parse(Carbon::now())->format('Y-m-d'))
                 return  redirect()->back()->with(['error' => 'يجب أن يكون تاريخ اليوم مطابقاً لتاريخ البدء بالمسار']);
             Path::where('id',$id)
                     ->update(['current_stage' =>1
@@ -164,7 +236,87 @@ class PathController extends Controller
             dd($th->getMessage())  ;         
         }
     }
-    
+
+    public function applicantsUsers($id) 
+    {
+        try
+        {          
+            $user_path_count= DB::table('paths')
+                        ->join('user_path','paths.id', '=','user_path.path_id')
+                        ->select('paths.id')
+                        ->where('paths.id',$id)
+                        ->where('paths.current_stage','-2')
+                        ->where('user_path.user_status','1')
+                        ->whereNull('paths.deleted_at')
+                        ->count();
+            $path=Path::where('id',$id)->first();            
+            return view('layouts.path.applicantsUsers')->with(['path'=>$path, 'user_path_count'=>$user_path_count]);   
+        }catch (\Throwable $th) { 
+            dd($th->getMessage())  ;         
+        }   
+    }
+
+    public function acceptUsers(Request $request, $id, $count)
+    {
+        try
+        {            
+            $input = $request->all();
+            $validator = Validator::make($input,[
+                'acceptUsersCount'=>'required'
+            ]);
+            if( $validator->fails()) 
+                return redirect()->back()->withErrors($validator);
+            else if ($count<=0) 
+                return redirect()->back()->with('error','لا يوجد منضمين إلى المسار');   
+            else if($input['acceptUsersCount']<=0)
+                return redirect()->back()->with('error','يجب أن يكون العدد الأعظمي للمقبولين أكبر من الصفر ');
+            else if($input['acceptUsersCount']>$count)
+                return redirect()->back()->with('error','يجب أن يكون العدد الأعظمي للمقبولين في المسار أصغر من أو يساوي '.$count);
+            else
+            {
+                $userpath=DB::table('user_path')
+                    ->select(DB::raw('user_id, (LENGTH(answer_join) + LENGTH(answer_accept_order)) as user_order'))
+                    ->where('user_status','1')
+                    ->where('path_id',$id)
+                    ->orderbyDESC('user_order')
+                    ->orderBy('created_at')
+                    ->get();                 
+                $acceptedUsersEmails=[]; 
+                for($i=0; $i<$input['acceptUsersCount']; $i++)
+                {
+                    $user_id=$userpath[$i]->user_id;
+                    UserPath::where('user_id',$user_id)->update(['user_status' => 2]);
+                    $user=User::where('id',$user_id)->first();
+                    $email=$user->email;
+                    $acceptedUsersEmails[$i]=$email;
+                }
+                Mail::send('Mails.acceptEmail',[], function ($message) use ($acceptedUsersEmails) {
+                        $message->bcc($acceptedUsersEmails);
+                        $message->subject('Accept Email');
+                }); 
+                $rejectedUsersEmails=[]; 
+                $j=0;          
+                for($i=$input['acceptUsersCount']; $i<$count; $i++)
+                {
+                    $user_id=$userpath[$i]->user_id;
+                    UserPath::where('user_id',$user_id)->update(['user_status' => 3]);
+                    $user=User::where('id',$user_id)->first();
+                    $email=$user->email;
+                    $rejectedUsersEmails[$j]=$email;
+                    $j=$j+1;
+                }
+                Mail::send('Mails.rejectEmail',[], function ($message) use ($rejectedUsersEmails) {
+                    $message->bcc($rejectedUsersEmails);
+                    $message->subject('Reject Email');
+                }); 
+                $path=Path::where('id',$id)->update(['current_stage' => -1]);
+                return redirect()->intended('/allpaths')->with('success', 'تم قبول العدد المطلوب بالمسار بنجاح');      
+            }
+        }catch (\Throwable $th) { 
+            dd($th->getMessage())  ;         
+        }   
+    }
+
     // Show Active Paths
     public function index()
     {

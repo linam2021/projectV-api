@@ -17,7 +17,25 @@ class UserExamController extends Controller
         $this->middleware('auth');
     }
 
-    //show merks of one user
+     //show Users marks forn an exam
+
+    public function ExamUsersMarks($idExam)
+    {
+        $exam = Exam::find($idExam);
+        if(!$exam)
+            return  redirect()->back()->with(['error' => 'exam not found']);
+        //get users marks
+        $users_exam= UserExam::where('exam_id',$exam->id)->orderBy('exam_result','DESC')->get();
+        return view('layouts.exam.examUsersMark')->with('users_exam',$users_exam);
+    }
+    //get mark of one users
+    public function UserExamMark($userId)
+    {
+        $user_exam= UserExam::where('user_id',$userId)->get();
+        return view('layouts.exam.UserExamMark')->with('user_exam',$user_exam);
+    }
+  
+    //show marks of one user
     public function showUserMarks(Request $request,$userId)
     {
         $user=User::where('id',Auth::id())->where('is_admin',1)->get();
@@ -126,5 +144,4 @@ class UserExamController extends Controller
     {
         //
     }
-
 }
