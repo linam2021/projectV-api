@@ -143,7 +143,7 @@ class ExamController extends Controller
     }
      
     public function showExams(){
-        try {  
+        try {
                 $now = Carbon::now();
                 //get recent exams
                 $exams=DB::table('exams')
@@ -158,4 +158,28 @@ class ExamController extends Controller
                 //dd($th->getMessage());
             }
     }
+   
+    //edit an exam
+    public function edit(){
+        return view('layouts.exam.editExam');
+    }
+  
+    //update an exam
+    public function update(Request $request,$idExam){
+        $this->validate($request,[
+            'exam_start_date' => 'required'
+        ]);
+        $exam= Exam::find($idExam);
+        if($exam->exam_type !='practicalTheoretical')
+            return redirect()->back()->with(['error' => 'you an only update practicalTheoretical exam']);
+        $exam_start_date=Carbon::parse($exam->exam_start_date)->toDateString();
+        if($exam_start_date == $request->exam_start_date){
+            return redirect()->back()->with(['error' => 'today is date of this exam you can not update it now']);
+        }
+        $exam->exam_start_date = $request->exam_start_date;
+        $exam->save();
+        return redirect()->back()->with(['success' => 'exam was updated successfully']);
+    }
+
+
 }
