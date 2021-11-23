@@ -35,7 +35,7 @@ class ExamController extends Controller
         try { 
             $input = $request->all();
             $validate = Validator::make($request->all(), [
-                'exam_type' => 'required',
+                'exam_type' => 'required|in:theoretical,practical,practicalTheoretical',
                 'exam_start_date' =>'required',
                 'sucess_mark' =>'required',
                 'maximum_mark' =>'required'
