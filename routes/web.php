@@ -5,7 +5,9 @@ use App\Http\Controllers\WEB\HomeController;
 use App\Http\Controllers\WEB\PathController;
 use App\Http\Controllers\WEB\ExamController;
 use App\Http\Controllers\WEB\CourseController;
+use App\Http\Controllers\WEB\MessageController;
 use App\Http\Controllers\WEB\PraticalResultsController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,7 +37,7 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
      // Home Route
      Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // Paths Routes     
+    // Paths Routes
     Route::get('/allpaths', [PathController::class, 'allwithTrashed'])->name('paths.allwithTrashed');
     Route::get('/loadImage/{name}', [PathController::class, 'loadPathImage'])->name('loadImage');
     Route::get('/paths/create', [PathController::class, 'create'])->name('path.create');
@@ -49,13 +51,13 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/paths/applicantsUsers/{id}', [PathController::class, 'applicantsUsers'])->name('path.applicantsUsers');
     Route::post('/paths/acceptUsers/{id}/{count}', [PathController::class, 'acceptUsers'])->name('path.acceptUsers');
 
-    
+
     //Courses Routes
     Route::get('/courses/{id}', [CourseController::class, 'index'])->name('course.index');
     Route::get('/courses/create/{id}', [CourseController::class, 'create'])->name('course.create');
     Route::post('/courses/store/{id}/{qbid}', [CourseController::class, 'store'])->name('course.store');
-    
-    
+
+
     Route::get('/paths', [PathController::class, 'index'])->name('paths.index');
     Route::get('/paths/trashed', [PathController::class, 'trashed'])->name('paths.trashed');
     Route::get('/paths/{id}/currentusers/', [PathController::class, 'currentUsersPath'])->name('paths.currentusers');
@@ -76,3 +78,11 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
 Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->name('praticalresults');
 
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
+
+//Messages
+Route::get('/Messages', [MessageController::class, 'index'])->name('messages');
+Route::get('/Messages/create', [MessageController::class, 'create'])->name('messages.create');
+Route::post('/Messages/store', [MessageController::class, 'sendMessage'])->name('message.store');
+Route::get('/Messages/showMessage/{id}', [MessageController::class, 'showMessage'])->name('message.showMessage');
+Route::get('/Messages/destroy/{id}', [MessageController::class, 'destroy'])->name('message.destroy');
+

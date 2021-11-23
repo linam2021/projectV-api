@@ -30,7 +30,7 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    
+
     public function addExam(Request $request, $id){
         try { 
             $input = $request->all();
@@ -158,12 +158,13 @@ class ExamController extends Controller
                 //dd($th->getMessage());
             }
     }
-   
+
+    
     //edit an exam
     public function edit(){
         return view('layouts.exam.editExam');
     }
-  
+
     //update an exam
     public function update(Request $request,$idExam){
         $this->validate($request,[
