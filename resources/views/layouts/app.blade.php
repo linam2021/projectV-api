@@ -16,6 +16,14 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet' type='text/css'>
 
+    <!-- start for datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <!-- end for datepicker -->
     <!-- Stylesheet -->
     <link rel="stylesheet" type="text/css" href="{{URL::asset('css/bootstrap.rtl.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{URL::asset('css/all.min.css')}}">
@@ -35,6 +43,7 @@
           }
         }
       </style>
+    
 </head>
 <body>
     <div id="app"  class="container">
@@ -101,5 +110,6 @@
     <!-- SCRIPTS -->
     <script src="{{URL::asset('js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{URL::asset('js/all.min.js')}}"></script>
+    <script src="{{URL::asset('js/dashboard.js')}}"></script>
 </body>
 </html>

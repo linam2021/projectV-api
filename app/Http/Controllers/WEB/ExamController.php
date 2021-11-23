@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\web;
+namespace App\Http\Controllers\WEB;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Course;
-use App\Models\Exam;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Course;
+use App\Models\Path;
+use App\Models\Exam;
+use App\Models\Question;
 use Illuminate\Support\Facades\Http;
 
 class ExamController extends Controller
@@ -29,7 +30,118 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    
+    public function addExam(Request $request, $id){
+        try { 
+            $input = $request->all();
+            $validate = Validator::make($request->all(), [
+                'exam_type' => 'required',
+                'exam_start_date' =>'required',
+                'sucess_mark' =>'required',
+                'maximum_mark' =>'required'
+            ]);
+            if ($validate->fails()) 
+                return redirect()->back()->withInput()->with('error', $validate->errors());
+            
+            $courseP = Path::where('id',$id)->orderByDesc('id')->first();
+            if ($courseP->current_stage == -3)
+                $course= Course::where('path_id',$id)->where('stage',1)->first(); 
+            // else
+            // $course= Course::where('path_id',$id)->where('stage',1)->first();
+            
+            if ($courseP->current_stage != -3)
+                return redirect()->back()->withInput()->with('error', "تم إعداد الامتحان لهذه المرحلة سابقاً");
+                
+            $coursefinishDate=Carbon::createFromFormat('Y-m-d H:i', $course->course_start_date.' 00:00')->addDays($course->course_duration);
+            $inputexamDate = Carbon::createFromFormat('m/d/Y', $input['exam_start_date']);
+            $inputexamDate=Carbon::createFromFormat('Y-m-d H:i', $inputexamDate->format('Y-m-d'). '00:00');
+            
+            if ( Carbon::parse($input['exam_start_date'])->format('Y-m-d') <=  Carbon::parse(Carbon::now())->format('Y-m-d'))
+                return  redirect()->back()->withInput()->with(['error' => 'يجب أن يكون تاريخ الامتحان بعد التاريخ الحالي']);
 
+            if ($inputexamDate <= $coursefinishDate)
+                return  redirect()->back()->withInput()->with(['error' => 'يجب أن يكون تاريخ الامتحان بعد تاريخ '. $coursefinishDate->format('d-m-Y')]); 
+            
+            if($input['sucess_mark']>=$input['maximum_mark'])
+                return redirect()->back()->withInput()->with('error', "يجب أن تكون درجة النجاح أصغر من الدرجة العظمى");
+
+            if($input['exam_type']=='theoretical')   
+            {
+                $questionBankCount = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('http://gamequestionbank.herokuapp.com/api/getQuestionsCount', ['api_key' => '52w32pG0971iQS33PKHfgPuSurfn0EcO','course_id' => $course->questionbank_course_id])->json();
+
+                if($questionBankCount['data']['questionCount'] < $input['questions_count'])
+                    return redirect()->back()->withInput()->with('error', "يجب أن يكون عدد الأسئلة الأساسية أصغر أو يساوي ".$questionBankCount['data']['questionCount']);
+                
+                if ($input['maximum_mark'] != $input['questions_count']*2)
+                    return redirect()->back()->withInput()->with('error', "يجب أن تكون الدرجة العظمى ".($input['questions_count']*2));
+               
+                if ($input['exam_duration'] <15)
+                    return redirect()->back()->withInput()->with('error', "يجب أن تكون مدة الامتحان 15 دقيقة على الأقل");
+                
+                $exam =Exam::create([
+                                'exam_type' => 'theoretical',
+                                'course_id' => $course->id,
+                                'exam_start_date' => $inputexamDate,
+                                'exam_duration'=> $input['exam_duration'],
+                                'questions_count' => $input['questions_count'],
+                                'sucess_mark' => $input['sucess_mark'],
+                                'maximum_mark' => $input['maximum_mark'] 
+                                ]);
+                
+               
+                Path::where('id',$id)->update(['current_stage' =>-2]); 
+
+                // add Questions               
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('http://gamequestionbank.herokuapp.com/api/getRandomQuestions', ['api_key' => '52w32pG0971iQS33PKHfgPuSurfn0EcO','course_id'=>$course->id,'question_count'=>$input['questions_count']])->json();
+                for($i=0; $i<count($response['data']);$i++)
+                {
+                    $addPQues=Question::create([
+                        'question_text'=>$response['data'][$i]['question_text'],
+                        'question_image_url'=>$response['data'][$i]['question_image'],
+                        'answer_a'=>$response['data'][$i]['answer_a'],
+                        'answer_b'=>$response['data'][$i]['answer_b'],
+                        'answer_c'=>$response['data'][$i]['answer_c'],
+                        'correct_answer'=>$response['data'][$i]['correct_answer'], 
+                        'primary_question_id'=>$response['data'][$i]['primary_question_id'],                       
+                        'exam_id'=>$exam->id
+                    ]);
+
+                    $addSubQues=Question::create([
+                        'question_text'=>$response['data'][$i]['sub_question']['question_text'],
+                        'question_image_url'=>$response['data'][$i]['sub_question']['question_image'],
+                        'answer_a'=>$response['data'][$i]['sub_question']['answer_a'],
+                        'answer_b'=>$response['data'][$i]['sub_question']['answer_b'],
+                        'answer_c'=>$response['data'][$i]['sub_question']['answer_c'],
+                        'correct_answer'=>$response['data'][$i]['sub_question']['correct_answer'],
+                        'primary_question_id'=>$addPQues->id,
+                        'exam_id'=>$exam->id
+                    ]);
+                }
+                return redirect()->intended('/allpaths')->with('success', 'تم إعداد امتحان المرحلة بنجاح');
+            }
+            else
+            {
+                $exam =Exam::create([
+                    'exam_type' => $input['exam_type'],
+                    'course_id' => $course->id,
+                    'exam_start_date' => $inputexamDate,
+                    'exam_duration'=> $input['exam_duration'],
+                    'questions_count' => $input['questions_count'],
+                    'sucess_mark' => $input['sucess_mark'],
+                    'maximum_mark' => $input['maximum_mark'] 
+                    ]);
+                Path::where('id',$id)->update(['current_stage' =>-2]);     
+                return redirect()->intended('/allpaths')->with('success', 'تم إعداد امتحان المرحلة بنجاح');
+            }
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
+    }
+     
     public function showExams(){
         try {
                 $now = Carbon::now();
@@ -46,64 +158,12 @@ class ExamController extends Controller
                 //dd($th->getMessage());
             }
     }
-    //create an exam
-    public function create(){
-        $courses = Course::all();
-        return view('layouts.exam.addExam')->with('courses',$courses);
-    }
-    //add exam
-    public function addExam(Request $request){
-        $user=User::where('id',Auth::id())->where('is_admin',1)->get();
-        if($user->isEmpty())
-            return redirect()->back()->with(['error' => 'you do not have Permission']);
-        //validator
-        $this->validate($request,[
-            'exam_type'          => 'required|in:theoretical,practical,practicalTheoretical',
-            'course_id'          => 'required',
-            'exam_start_date'    => 'required',
-            'exam_duration'      => 'required',
-            'questions_count'    => 'required',
-            'maximum_mark'       => 'required',
-            'sucess_mark'        => 'required',
-
-        ]);
-        //get course
-        $course = Course::find($request->course_id);
-        if(!$course)
-            return  redirect()->back()->with(['error' => 'course not found']);
-        else{
-            //verify questions_count in QuestionBank api
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post('http://gamequestionbank.herokuapp.com/api/getRandomQuestions', ['api_key' => $request->api_key,
-                                                                                      'course_id'=>$course->questionbank_course_id,
-                                                                                      'question_count'=>$request->questions_count])->json();
-            if($response['data']->isEmpty())
-                return  redirect()->back()->with(['error' => 'course not found']);
-            if($request->exam_type == 'theoretical'){
-                if( ($request->questions_count *2) <= ($request->sucess_mark))
-                return  redirect()->back()->with(['error' => 'success mark must be less than total number of questions  ']);
-            }
-            //specify maximum mark
-            $maximum_mark = ($request->exam_type == 'theoretical')? ($request->questions_count *2): ($request->maximum_mark);
-            $exam=Exam::create([
-                'exam_type'          =>$request->exam_type ,
-                'course_id'          => $request->course_id ,
-                'exam_start_date'    => $request->exam_start_date ,
-                'exam_duration'      =>$request->exam_duration ,
-                'questions_count'    => $request->questions_count,
-                'sucess_mark'        =>$request->sucess_mark ,
-                'maximum_mark'       => $maximum_mark ,
-            ]);
-            return redirect()->back()->with('success','the exam was stored successfully') ;
-        }
-
-    }
-
+   
     //edit an exam
     public function edit(){
         return view('layouts.exam.editExam');
     }
+  
     //update an exam
     public function update(Request $request,$idExam){
         $this->validate($request,[

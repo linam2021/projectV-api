@@ -70,10 +70,10 @@
           <div class="card-body">
             @foreach ($pathsProgress as $path)
                 <h4 class="small font-weight-bold">{{$path->path_name}}&nbsp;
-                    <span class="float-right">%{{(int)$path->course_stage_count}}</span></h4>
+                    <span class="float-right">%{{(int)$path->path_progress}}</span></h4>
                 <div class="progress mb-4">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{(int)$path->course_stage_count}}%"
-                        aria-valuenow={{$path->course_stage_count}} aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{(int)$path->path_progress}}%"
+                        aria-valuenow={{$path->path_progress}} aria-valuemin="0" aria-valuemax="100">
                     </div>
                  </div>
             @endforeach
@@ -91,7 +91,7 @@
                         @foreach ($pathsProgress as $p)
                             <tr class="table-light text-center">
                                     <td scope="row">{{$p->path_name}}</td>                             
-                                    <td scope="row">%{{(int)$p->course_stage_count}}</td>                   
+                                    <td scope="row">%{{(int)$p->path_progress}}</td>                   
                             </tr>                          
                         @endforeach
                     </tbody>

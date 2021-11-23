@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Exam;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class UserPathController extends BaseController
 {
@@ -111,12 +113,117 @@ class UserPathController extends BaseController
                         $path = Path::find($path_id);
                         return $this->sendResponse($path, 'Congratulations, You Are Completed The Path Successfully');
                     default:
-                        return $this->sendError('You Do Not Have Paths');
+                        return $this->sendError('You Do Not Have Any Path Now');
                 }            
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
     }  
+    
+    /**
+     * return Current user_status  
+     */
+    public function showUserStatus()
+    {
+        try {
+            $user = Auth::user();
+            // If User Does Not Complete His Profile
+            if (!$user->first_name) 
+                return $this->sendError('You must complete your profile');
+            
+            $pathsCount = $user->userPaths->count();
+            if ($pathsCount==0) 
+                return $this->sendError('You do not have path now');
+
+            // States Of User (Accept, Wait, Reject, Exclude, Complete)           
+            $userLastPath= $user->userPaths->last(); 
+            //if ($userLastPath->path_start_date >= Carbon::yesterday()) { // yesterday just temporialy (Suppose to be time to start date event)
+                switch ($userLastPath->user_status) {
+                    case 1: // 1 => Waiting for confirm admin
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status], 'User waits for admin confirmation');
+                    case 2: // 2 => Accepted
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is accepted in the path');
+                    case 3: // 3 => Rejected
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is rejected from the path');
+                    case 4: // 4 => Excluded
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is excluded from the path');
+                    case 5: // 5 => Completed
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is completed the path');
+                    default:
+                        return $this->sendError('You do not have path now');
+                }            
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage());
+        }
+    }  
+        
+    public function showUserPathInfo()
+    {
+        try {
+            $user = Auth::user();
+           
+            $Inpath = $user->userPaths->where('user_status',2)->count();
+            if ($Inpath==0) 
+                return $this->sendError('You Do Not Have Any Path Now');
+            //get user path
+            $user_path = UserPath::where('user_id',$user->id)->where('user_status',2)->first();
+            $path=Path::where('id',$user_path->path_id)->first();
+            if(is_null($user_path))
+                return $this->sendError('You do not have access to any path');
+            $userId=Auth::id();
+            $rank = DB::table('user_path')->where('path_start_date',$path->path_start_date)->whereNotNull('path_start_date')->where('user_status',2)->orderByDesc('score')->orderBy('user_id')->get();
+            $position = $rank->search(function ($cha) use ($userId) {
+                return $cha->user_id == $userId;
+            });    
+
+            $progressiveCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',2)->count();
+
+            $excludedHeroesCount =UserPath::where('path_id',$user_path->path_id)->where('user_status',4)->count();
+
+            if ($path->current_stage==1)
+                $score =0;
+            else {
+                $currentPathTotalScore =DB::table('courses')
+                                ->join('exams','courses.id', '=','exams.course_id')
+                                ->where('courses.path_id',$user_path->path_id)
+                                ->whereBetween('courses.id', [1, $path->current_stage-1])
+                                ->sum('exams.maximum_mark');
+                $score=round($user_path->score*100/$currentPathTotalScore);
+            } 
+            $filename=$path->path_image_name;
+            $dir = '/';
+            $recursive = false; // Get subdirectories also?
+            $contents = collect(Storage::disk('google')->listContents($dir, $recursive));    
+            // Get file details...
+            $file = $contents
+                ->where('type', '=', 'file')
+                ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+                ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+                ->first(); // there can be duplicate file names!
+            // Stream the file to the browser...
+            $readStream = Storage::disk('google')->getDriver()->readStream($file['path']);
+            $targetFile = public_path("{$filename}");
+            file_put_contents($targetFile, stream_get_contents($readStream), FILE_APPEND);
+            //$targetFile=str_replace("\\", "/", $targetFile);
+            $targetFile=env('APP_URL')."{$filename}";
+            return $this->sendResponse([
+                                'user_id' =>$user->id,
+                                'first_name' => $user->first_name,
+                                'father_name' => $user->father_name,
+                                'last_name' => $user->last_name,
+                                'gender' =>$user->gender,
+                                'rank' => $position + 1,
+                                'score' =>$score,
+                                'repeat_chance_no' => $user_path->repeat_chance_no,
+                                'current_stage'=>$path->current_stage,
+                                'progressiveCount' => $progressiveCount,
+                                'ExcludedCount' => $excludedHeroesCount,
+                                'path_image_url'=> $targetFile
+            ], 'User Path Info is retrieved successfully');            
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage());
+        }
+    }
     
     public function showUserPathLeaderboard()
     {
@@ -137,10 +244,16 @@ class UserPathController extends BaseController
                                     ->join('users','user_path.user_id', '=','users.id')
                                     ->select('users.id','users.first_name','users.last_name', 'users.gender', 'user_path.path_id','user_path.score')
                                     ->where('user_status',2)
+                                    ->where('user_path.path_id',$user_path->path_id)
                                     ->orderByDesc('score')
                                     ->orderBy('users.id')->take(300)->get();
-            foreach($UserPathLeaderboard as $userP)               
-                $userP->score =round($userP->score*100/$currentPathTotalScore);
+            foreach($UserPathLeaderboard as $userP)
+            {    
+                if ($path->current_stage==1) 
+                    $userP->score =0;
+                else
+                    $userP->score =round($userP->score*100/$currentPathTotalScore);
+            }
             if(!$user_path){
                 return $this ->sendError('There is no users in leader board');
             }else{

@@ -4,12 +4,21 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card my-3">
-                <div class="card-header">تسجيل الدخول</div>
+                <div class="card-header text-primary"><h3><b>تسجيل الدخول</b></h3></div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form action="{{ route('login') }}"  method="POST">
                         @csrf
-
+                        @if (\Session::has('success'))
+                        <div class="alert alert-success">
+                            <p>{{\Session::get('success')}}</p>
+                        </div>
+                        @endif
+                        @if (\Session::has('error'))
+                        <div class="alert alert-danger">
+                            <p>{{\Session::get('error')}}</p>
+                        </div>
+                        @endif
                         <div class="form-group row my-3">
                             <label for="email" class="col-md-4 col-form-label text-md-right">البريد الالكتروني</label>
 

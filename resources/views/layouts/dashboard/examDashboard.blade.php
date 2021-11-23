@@ -18,27 +18,21 @@
               <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href={{ route('paths.allwithTrashed') }}>
                       <span data-feather="home"></span>
                       <i class="fa fa-table"></i>&nbsp;عرض المسارات
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{ route('path.create') }}">
                       <span data-feather="home"></span>
                       <i class="fa fa-plus"></i>&nbsp; إضافة مسار
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{ route('paths.openedPaths') }}">
                       <span data-feather="home"></span>
-                      <i class="fas fa-trash-alt"></i>&nbsp;حذف مسار (إخفاء)
-                    </a>          
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-check"></i>&nbsp;قبول مستخدمين في مسار
+                      <i class="fa fa-tasks"></i>&nbsp; متابعة المسارات المفتوحة
                     </a>
                   </li>
                 </ul>
@@ -58,13 +52,7 @@
                       <i class="fa fa-table"></i>&nbsp;عرض الامتحانات
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-plus"></i>&nbsp;إضافة امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
+                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">
                       <span data-feather="home"></span>
                       <i class="fa fa-exchange-alt"></i>&nbsp;تعديل موعد امتحان
@@ -73,13 +61,7 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">
                       <span data-feather="home"></span>
-                      <i class="fa fa-question"></i>&nbsp;إضافة أسئلة لدورة محددة
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-tasks"></i>&nbsp;عرض أسئلة دورة محددة
+                      <i class="fa fa-tasks"></i>&nbsp;عرض أسئلة مرحلة محددة
                     </a>
                   </li>
                 </ul>
