@@ -30,12 +30,12 @@ class ExamController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    
+
     public function addExam(Request $request, $id){
         try { 
             $input = $request->all();
             $validate = Validator::make($request->all(), [
-                'exam_type' => 'required',
+                'exam_type' => 'required|in:theoretical,practical,practicalTheoretical'',
                 'exam_start_date' =>'required',
                 'sucess_mark' =>'required',
                 'maximum_mark' =>'required'
@@ -158,12 +158,13 @@ class ExamController extends Controller
                 //dd($th->getMessage());
             }
     }
-   
+
+    
     //edit an exam
     public function edit(){
         return view('layouts.exam.editExam');
     }
-  
+
     //update an exam
     public function update(Request $request,$idExam){
         $this->validate($request,[
