@@ -40,9 +40,11 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/loadImage/{name}', [PathController::class, 'loadPathImage'])->name('loadImage');
     Route::get('/paths/create', [PathController::class, 'create'])->name('path.create');
     Route::post('/paths/store', [PathController::class, 'store'])->name('path.store');
+    Route::get('/openedPaths', [PathController::class, 'openedPaths'])->name('paths.openedPaths');
     Route::get('/regPath/{id}', [PathController::class, 'startRegisterInPath'])->name('path.startRegisterInPath');
     Route::post('/paths/setStartReg/{id}', [PathController::class, 'setStartRegisterPath'])->name('path.setStartRegisterPath');
     Route::get('/paths/finishReg/{id}', [PathController::class, 'finishRegister'])->name('path.finishRegister');
+    Route::get('/paths/examPreparation/{id}', [PathController::class, 'examPreparation'])->name('path.examPreparation');
     Route::get('/paths/startPath/{id}', [PathController::class, 'startPath'])->name('path.startPath');
     Route::get('/paths/applicantsUsers/{id}', [PathController::class, 'applicantsUsers'])->name('path.applicantsUsers');
     Route::post('/paths/acceptUsers/{id}/{count}', [PathController::class, 'acceptUsers'])->name('path.acceptUsers');
@@ -66,6 +68,8 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
 
     // Exam Routes
     Route::get('/showExams', [ExamController::class, 'showExams'])->name('showExams');
+    Route::post('/exam/add/{id}', [ExamController::class, 'addExam'])->name('exam.add');
+
 });
 
 // Exams Pratical Results

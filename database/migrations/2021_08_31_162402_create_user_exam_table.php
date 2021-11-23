@@ -22,6 +22,7 @@ class CreateUserExamTable extends Migration
             //date which user passed exam
             $table->date('user_exam_date');
             $table->double('exam_result')->nullable();
+            $table->double('temp_pratical_exam_result')->nullable(); // use it only when the user replay the theoretical exam in practicalTheoretical case
             $table->enum('is_well_prepared',['yes','no']);
             $table->enum('is_easy_exam',['easy','hard']);
             $table->primary(['user_id', 'path_id', 'path_start_date','exam_id']);

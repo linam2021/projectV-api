@@ -30,7 +30,7 @@
                                 <input name="acceptUsersCount" type='text' class="form-control" pattern="\d+" size =3 maxlength="5" class="text-center" required>    
                             </div>
                         </div>
-                       </div>                   
+                    </div>                   
                 </div>
                 <div class="col-md-12 text-center my-3">
                     <button type="submit" class="btn btn-primary">موافق</button>
