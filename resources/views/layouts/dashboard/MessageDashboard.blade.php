@@ -11,11 +11,11 @@
           <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button" id ="flush-buttonOne" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                <button class="accordion-button collapsed" id ="flush-buttonOne" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                   <i class="fa fa-university"></i> &nbsp;المسارات
                 </button>
               </h2>
-              <div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <ul class="nav flex-column">
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href={{ route('paths.allwithTrashed') }}>
@@ -98,11 +98,11 @@
             </div>
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingFour">
-                <button class="accordion-button collapsed" id ="flush-buttonFour"type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                <button class="accordion-button" id ="flush-buttonFour"type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
                   <i class="fas fa-envelope"></i>&nbsp; الرسائل
                 </button>
               </h2>
-              <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+              <div id="flush-collapseFour" class="accordion-collapse collapse show" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                 <ul class="nav flex-column">
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{route('messages')}}">

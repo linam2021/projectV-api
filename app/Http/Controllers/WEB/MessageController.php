@@ -11,30 +11,22 @@ use App\Models\UserPath;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Validator;
 
 class MessageController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+ 
     //show all messages send by admin
     public function index()
     {
         try {
-        //      //get cureent user
-        // $user=User::where('id',Auth::id())->where('is_admin',1)->get();
-        // if($user->isEmpty())
-        //     return view('Messages.index')->with(['error' => 'you do not have permission']);
-        //get messages for admin
-        $messages=Message::orderBy('id')->get();
-        $admins= User::where('is_admin',1)->get();
-        return view('Messages.index')->with('messages',$messages)->with('admins',$admins);
+            //get messages for admin
+            $messages=Message::orderByDESC('id')->get();
+            $admins= User::where('is_admin',1)->get();
+            return view('Messages.index')->with('messages',$messages)->with('admins',$admins);
         } catch (\Throwable $th) {
             return view('Messages.index')->with(['error' =>$th->getMessage()]);
         }
-
-
     }
 
     //create a messages
@@ -46,39 +38,40 @@ class MessageController extends Controller
         return view('Messages.create')->with('paths',$paths);
     }
 
-    public function sendMessage(Request $request)
+    public function store(Request $request)
     {
         try {
-            // dd($request->path_name);
-        $this->validate($request,[
-            'title' =>  'required|string',
-            'body' =>  'required',
-            'path_name'=> 'required'
-        ]);
-        $message = new Message();
-        $message->title = $request->title;
-        $message->body = $request->body;
-        $message->admin_id = Auth::id();
-        $message->save();
-        //get path
-        $path= Path::where('id',$request->path_name)->first();
-        //get users for current path
-        $usersPath = UserPath::where('path_id',$path->id)->where('user_status',2)->get();
-        //save in message_user table
-        $users=[];
-        foreach($usersPath as $item){
-             $users[]=MessageUser::create([
-                'user_id' => $item->user_id,
-                'message_id' => $message->id,
+            $validate = Validator::make($request->all(), [
+                'title' =>  'required|string',
+                'body' =>  'required',
+                'path_name'=> 'required'
             ]);
-        }
+            if ($validate->fails()) 
+                return redirect()->back()->withInput()->with('error', $validate->errors());
 
-        if($request->input('sendNotification',true)){
-            return view('PushNotifications.create')->with('message',$message)->with('users',$users);
-        }
-        return view('Messages.index')->with('success','the message was sent successfully') ;
+            $message = new Message();
+            $message->title = $request->title;
+            $message->body = $request->body;
+            $message->admin_id = Auth::id();
+            $message->save();
+            //get path
+            $path= Path::where('id',$request->path_name)->first();
+            //get users for current path
+            $usersPath = UserPath::where('path_id',$path->id)->where('user_status',2)->get();
+            //save in message_user table
+            $users=[];
+            foreach($usersPath as $item){
+                $users[]=MessageUser::create([
+                    'user_id' => $item->user_id,
+                    'message_id' => $message->id,
+                ]);
+            }
+            // if($request->input('sendNotification',true)){                
+            //     return view('PushNotifications.create')->with('message',$message)->with('users',$users);
+            // } 
+            return redirect()->intended('Messages')->with('success', 'تم إرسال الرسالة بنجاح');           
         } catch (\Throwable $th) {
-            return view('Messages.index')->with(['error' =>$th->getMessage()]);
+            return redirect()->intended('Messages')->with(['error' =>$th->getMessage()]);
         }
 
     }
@@ -96,9 +89,8 @@ class MessageController extends Controller
         } catch (\Throwable $th) {
             return view('Messages.index')->with(['error' =>$th->getMessage()]);
         }
-
-
     }
+
     public function destroy($id)
     {
         try
@@ -107,11 +99,9 @@ class MessageController extends Controller
             if (is_null($message))
             return  redirect()->back()->with(['error' => 'message not found']);
             $message->delete();
-            return redirect()->back()->with('success','message deleted successfully');
+            return redirect()->back()->with('success','تم حذف الرسالة بنجاح');
         } catch (\Throwable $th) {
             return redirect()->back()->with(['error' =>$th->getMessage()]);
         }
     }
-
-
 }

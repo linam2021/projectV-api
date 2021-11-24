@@ -116,12 +116,6 @@
                       <i class="fa fa-paper-plane"></i>&nbsp;إرسال رسالة
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fas fa-trash-alt"></i>&nbsp;حذف رسالة
-                    </a>
-                  </li>
                 </ul>
               </div>
             </div>

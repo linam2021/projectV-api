@@ -72,6 +72,12 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/showExams', [ExamController::class, 'showExams'])->name('showExams');
     Route::post('/exam/add/{id}', [ExamController::class, 'addExam'])->name('exam.add');
 
+    //Messages
+    Route::get('/Messages', [MessageController::class, 'index'])->name('messages');
+    Route::get('/Messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::post('/Message/store', [MessageController::class, 'store'])->name('message.store');
+    Route::get('/Messages/showMessage/{id}', [MessageController::class, 'showMessage'])->name('message.showMessage');
+    Route::get('/Messages/destroy/{id}', [MessageController::class, 'destroy'])->name('message.destroy');
 });
 
 // Exams Pratical Results
@@ -80,9 +86,4 @@ Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
 
 //Messages
-Route::get('/Messages', [MessageController::class, 'index'])->name('messages');
-Route::get('/Messages/create', [MessageController::class, 'create'])->name('messages.create');
-Route::post('/Messages/store', [MessageController::class, 'sendMessage'])->name('message.store');
-Route::get('/Messages/showMessage/{id}', [MessageController::class, 'showMessage'])->name('message.showMessage');
-Route::get('/Messages/destroy/{id}', [MessageController::class, 'destroy'])->name('message.destroy');
 
