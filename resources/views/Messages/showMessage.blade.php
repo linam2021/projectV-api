@@ -44,7 +44,7 @@
                 </table>
                 @else
                 <div class="alert alert-warning" role="alert">
-                    لا يوجد رسائل  في الوقت الحالي
+                    لا يوجد رسائل  في الوقت الحالي.
                 </div>
                 @endif
             </div>
