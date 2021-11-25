@@ -20,9 +20,9 @@ class CreateExamsTable extends Migration
             //date of starting an exam
             $table->dateTime('exam_start_date');
             //duration of an exam
-            $table->integer('exam_duration');
+            $table->integer('exam_duration')->nullable();
             //number of exam questions
-            $table->integer('questions_count');
+            $table->integer('questions_count')->nullable();
             $table->double('sucess_mark');
             $table->double('maximum_mark');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

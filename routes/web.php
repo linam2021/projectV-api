@@ -6,7 +6,9 @@ use App\Http\Controllers\WEB\HomeController;
 use App\Http\Controllers\WEB\PathController;
 use App\Http\Controllers\WEB\ExamController;
 use App\Http\Controllers\WEB\CourseController;
+use App\Http\Controllers\WEB\MessageController;
 use App\Http\Controllers\WEB\PraticalResultsController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,20 +40,23 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
 
     // Paths Routes
     Route::get('/allpaths', [PathController::class, 'allwithTrashed'])->name('paths.allwithTrashed');
+    Route::get('/loadImage/{name}', [PathController::class, 'loadPathImage'])->name('loadImage');
     Route::get('/paths/create', [PathController::class, 'create'])->name('path.create');
     Route::post('/paths/store', [PathController::class, 'store'])->name('path.store');
+    Route::get('/openedPaths', [PathController::class, 'openedPaths'])->name('paths.openedPaths');
     Route::get('/regPath/{id}', [PathController::class, 'startRegisterInPath'])->name('path.startRegisterInPath');
     Route::post('/paths/setStartReg/{id}', [PathController::class, 'setStartRegisterPath'])->name('path.setStartRegisterPath');
     Route::get('/paths/finishReg/{id}', [PathController::class, 'finishRegister'])->name('path.finishRegister');
+    Route::get('/paths/examPreparation/{id}', [PathController::class, 'examPreparation'])->name('path.examPreparation');
     Route::get('/paths/startPath/{id}', [PathController::class, 'startPath'])->name('path.startPath');
-    Route::get('/paths/{id}/destroy', [PathController::class, 'destroy'])->name('paths.destroy');
+    Route::get('/paths/applicantsUsers/{id}', [PathController::class, 'applicantsUsers'])->name('path.applicantsUsers');
+    Route::post('/paths/acceptUsers/{id}/{count}', [PathController::class, 'acceptUsers'])->name('path.acceptUsers');
+
 
     //Courses Routes
     Route::get('/courses/{id}', [CourseController::class, 'index'])->name('course.index');
     Route::get('/courses/create/{id}', [CourseController::class, 'create'])->name('course.create');
     Route::post('/courses/store/{id}/{qbid}', [CourseController::class, 'store'])->name('course.store');
-
-
 
     Route::get('/paths', [PathController::class, 'index'])->name('paths.index');
     Route::get('/paths/trashed', [PathController::class, 'trashed'])->name('paths.trashed');
@@ -60,6 +65,8 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/paths/{id}/currentexcludeuser', [PathController::class, 'currentExcludeUser'])->name('paths.currentexcludeuser');
     Route::get('/paths/{id}/excludeusers', [PathController::class, 'allExcludeUser'])->name('paths.excludeusers');
     Route::get('/paths/{id}/restore', [PathController::class, 'restore'])->name('paths.restore');
+    Route::get('/paths/{id}/destroy', [PathController::class, 'destroy'])->name('paths.destroy');
+
 
     // Search User
     Route::get('/users/search/{info}', [AdminController::class, 'searchUsers'])->name('users.search');
@@ -69,6 +76,14 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
 
     // Exam Routes
     Route::get('/showExams', [ExamController::class, 'showExams'])->name('showExams');
+    Route::post('/exam/add/{id}', [ExamController::class, 'addExam'])->name('exam.add');
+
+    //Messages
+    Route::get('/Messages', [MessageController::class, 'index'])->name('messages');
+    Route::get('/Messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::post('/Message/store', [MessageController::class, 'store'])->name('message.store');
+    Route::get('/Messages/showMessage/{id}', [MessageController::class, 'showMessage'])->name('message.showMessage');
+    Route::get('/Messages/destroy/{id}', [MessageController::class, 'destroy'])->name('message.destroy');
 });
 
 // Exams Pratical Results
@@ -76,11 +91,5 @@ Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->
 
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
 
-Route::get('put11', function() {
-    $filename = 'database&api.jpg';
-    $filePath = public_path($filename);
-    $fileData = File::get($filePath);
+//Messages
 
-    Storage::disk('google')->put($filename, $fileData);
-    return 'File was saved to Google Drive';
-});

@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('userpath/show', [UserPathController::class, 'show']);
     Route::get('showUserPathInfo', [UserPathController::class, 'showUserPathInfo']);
     Route::get('showUserPathLeaderboard', [UserPathController::class, 'showUserPathLeaderboard']);
+    Route::get('showUserStatus', [UserPathController::class, 'showUserStatus']);
     Route::post('acceptUser', [UserPathController::class, 'acceptUser']);
     Route::post('rejectUser', [UserPathController::class, 'rejectUser']);
 
