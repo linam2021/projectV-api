@@ -8,6 +8,7 @@ use App\Http\Controllers\WEB\ExamController;
 use App\Http\Controllers\WEB\CourseController;
 use App\Http\Controllers\WEB\MessageController;
 use App\Http\Controllers\WEB\PraticalResultsController;
+use App\Http\Controllers\WEB\StatisticsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -91,5 +92,19 @@ Route::get('exams/pratical', [PraticalResultsController::class, 'showUpload'])->
 
 Route::post('exams/pratical/import', [PraticalResultsController::class, 'uploadResults'])->name('praticalresults.import');
 
-//Messages
+Route::get('put11', function () {
+    $filename = 'database&api.jpg';
+    $filePath = public_path($filename);
+    $fileData = File::get($filePath);
+
+    Storage::disk('google')->put($filename, $fileData);
+    return 'File was saved to Google Drive';
+});
+
+// statistics
+Route::get('/users/continue/{id}', [StatisticsController::class, 'usersContinue']);
+Route::get('/users/applicants/{id}', [StatisticsController::class, 'usersApplicants']);
+Route::get('/users/excludes/{id}', [StatisticsController::class, 'usersExcludes']);
+Route::get('/users/answers/{id}', [StatisticsController::class, 'usersAnwsers']);
+Route::get('/paths/leaderboard/{id}', [StatisticsController::class, 'leaderboard']);
 
