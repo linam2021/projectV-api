@@ -18,8 +18,10 @@ class CreateCoursesTable extends Migration
             $table->bigInteger('path_id')->unsigned();
             $table->string('course_name');
             $table->string('course_link');
+            $table->date('course_start_date')->nullable();
             $table->integer('course_duration');
             $table->integer('stage');
+            $table->integer('exam_repeated')->default(0); 
             $table->bigInteger('questionbank_course_id')->unsigned();
             $table->timestamps();
 

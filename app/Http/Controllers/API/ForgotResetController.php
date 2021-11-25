@@ -27,10 +27,9 @@ class ForgotResetController extends BaseController
                 return $this->sendError('Email does not exists');
             $newtoken=str::random(6);
             $oldTokenEmail = Password_reset::where('email', $email)->first();
-            if ($oldTokenEmail) {
-                $oldTokenEmail->token = $newtoken;
-                $oldTokenEmail->save();                
-            } else {
+            if ($oldTokenEmail)
+                Password_reset::where('email', $email)->update(['token' => $newtoken]);
+            else {
                 DB::table('password_resets')->insert([
                     'email' => $email,
                     'token' => $newtoken

@@ -11,7 +11,7 @@
           <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button collapsed" id ="flush-buttonOne" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                <button class="accordion-button" id ="flush-buttonOne" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                   <i class="fa fa-university"></i> &nbsp;المسارات
                 </button>
               </h2>
@@ -27,6 +27,12 @@
                     <a class="nav-link active" aria-current="page" href="{{ route('path.create') }}">
                       <span data-feather="home"></span>
                       <i class="fa fa-plus"></i>&nbsp; إضافة مسار
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('paths.openedPaths') }}">
+                      <span data-feather="home"></span>
+                      <i class="fa fa-tasks"></i>&nbsp; متابعة المسارات المفتوحة
                     </a>
                   </li>
                 </ul>
@@ -46,22 +52,10 @@
                       <i class="fa fa-table"></i>&nbsp;عرض الامتحانات
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-plus"></i>&nbsp;إضافة امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
+                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">
                       <span data-feather="home"></span>
                       <i class="fa fa-exchange-alt"></i>&nbsp;تعديل موعد امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-question"></i>&nbsp;إضافة أسئلة لمرحلة محددة
                     </a>
                   </li>
                   <li class="nav-item">
@@ -111,21 +105,15 @@
               <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{route('messages')}}">
                       <span data-feather="home"></span>
                       <i class="fa fa-envelope-open-text"></i>&nbsp;عرض الرسائل
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{route('messages.create')}}">
                       <span data-feather="home"></span>
                       <i class="fa fa-paper-plane"></i>&nbsp;إرسال رسالة
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fas fa-trash-alt"></i>&nbsp;حذف رسالة
                     </a>
                   </li>
                 </ul>

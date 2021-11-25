@@ -120,6 +120,43 @@ class UserPathController extends BaseController
         }
     }  
     
+    /**
+     * return Current user_status  
+     */
+    public function showUserStatus()
+    {
+        try {
+            $user = Auth::user();
+            // If User Does Not Complete His Profile
+            if (!$user->first_name) 
+                return $this->sendError('You must complete your profile');
+            
+            $pathsCount = $user->userPaths->count();
+            if ($pathsCount==0) 
+                return $this->sendError('You do not have path now');
+
+            // States Of User (Accept, Wait, Reject, Exclude, Complete)           
+            $userLastPath= $user->userPaths->last(); 
+            //if ($userLastPath->path_start_date >= Carbon::yesterday()) { // yesterday just temporialy (Suppose to be time to start date event)
+                switch ($userLastPath->user_status) {
+                    case 1: // 1 => Waiting for confirm admin
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status], 'User waits for admin confirmation');
+                    case 2: // 2 => Accepted
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is accepted in the path');
+                    case 3: // 3 => Rejected
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is rejected from the path');
+                    case 4: // 4 => Excluded
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is excluded from the path');
+                    case 5: // 5 => Completed
+                        return $this->sendResponse(['user_status' =>$userLastPath->user_status] , 'User is completed the path');
+                    default:
+                        return $this->sendError('You do not have path now');
+                }            
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage());
+        }
+    }  
+        
     public function showUserPathInfo()
     {
         try {

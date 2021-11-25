@@ -6,8 +6,8 @@
         <div class="position-sticky pt-5">
             <a class="nav-link active" aria-current="page" href="{{route('home')}}">
               <h4><i class="fa fa-tachometer-alt"></i>&nbsp;لوحة التحكم</h4>
-            </a>         
-          <br> 
+            </a>
+          <br>
           <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingOne">
@@ -27,6 +27,12 @@
                     <a class="nav-link active" aria-current="page" href="{{ route('path.create') }}">
                       <span data-feather="home"></span>
                       <i class="fa fa-plus"></i>&nbsp; إضافة مسار
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('paths.openedPaths') }}">
+                      <span data-feather="home"></span>
+                      <i class="fa fa-tasks"></i>&nbsp; متابعة المسارات المفتوحة
                     </a>
                   </li>
                 </ul>
@@ -49,19 +55,7 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">
                       <span data-feather="home"></span>
-                      <i class="fa fa-plus"></i>&nbsp;إضافة امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
                       <i class="fa fa-exchange-alt"></i>&nbsp;تعديل موعد امتحان
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fa fa-question"></i>&nbsp;إضافة أسئلة لمرحلة محددة
                     </a>
                   </li>
                   <li class="nav-item">
@@ -111,21 +105,15 @@
               <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                 <ul class="nav flex-column">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{route('messages')}}">
                       <span data-feather="home"></span>
                       <i class="fa fa-envelope-open-text"></i>&nbsp;عرض الرسائل
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{route('messages.create')}}">
                       <span data-feather="home"></span>
                       <i class="fa fa-paper-plane"></i>&nbsp;إرسال رسالة
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
-                      <span data-feather="home"></span>
-                      <i class="fas fa-trash-alt"></i>&nbsp;حذف رسالة
                     </a>
                   </li>
                 </ul>
@@ -189,7 +177,7 @@
                 </ul>
               </div> --}}
             </div>
-          </div>            
+          </div>
             {{-- <li class="nav-item">
               <a class="nav-link" href="#">
                 <span class="fas fa-edit"></span>
@@ -221,7 +209,7 @@
               </a>
             </li>
           </ul> --}}
-  
+
           {{-- <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>التقارير المحفوظة</span>
             <a class="link-secondary" href="#" aria-label="إضافة تقرير جديد">
@@ -255,12 +243,12 @@
             </li>
           </ul>
         </div> --}}
-      </nav> 
+      </nav>
       <main class="col-md-8 ms-sm-auto col-lg-9 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
-          <h1>لوحة التحكم</h1>     
-        </div> 
-        @yield('dashboard-content')  
+          <h1>لوحة التحكم</h1>
+        </div>
+        @yield('dashboard-content')
       </main>
     </div>
   </div>
