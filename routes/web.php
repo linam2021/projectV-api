@@ -1,6 +1,7 @@
 <?php
 
 use App\http\Controllers\Auth\LoginController;
+use App\Http\Controllers\WEB\AdminController;
 use App\Http\Controllers\WEB\HomeController;
 use App\Http\Controllers\WEB\PathController;
 use App\Http\Controllers\WEB\ExamController;
@@ -34,8 +35,8 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 // Routes Access Just From Admin
 Route::group(['middleware' => ['admin', 'auth']], function () {
 
-     // Home Route
-     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Home Route
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     // Paths Routes
     Route::get('/allpaths', [PathController::class, 'allwithTrashed'])->name('paths.allwithTrashed');
@@ -57,7 +58,6 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/courses/create/{id}', [CourseController::class, 'create'])->name('course.create');
     Route::post('/courses/store/{id}/{qbid}', [CourseController::class, 'store'])->name('course.store');
 
-
     Route::get('/paths', [PathController::class, 'index'])->name('paths.index');
     Route::get('/paths/trashed', [PathController::class, 'trashed'])->name('paths.trashed');
     Route::get('/paths/{id}/currentusers/', [PathController::class, 'currentUsersPath'])->name('paths.currentusers');
@@ -67,6 +67,12 @@ Route::group(['middleware' => ['admin', 'auth']], function () {
     Route::get('/paths/{id}/restore', [PathController::class, 'restore'])->name('paths.restore');
     Route::get('/paths/{id}/destroy', [PathController::class, 'destroy'])->name('paths.destroy');
 
+
+    // Search User
+    Route::get('/users/search/{info}', [AdminController::class, 'searchUsers'])->name('users.search');
+
+    // Change Permision
+    Route::get('/user/permision/{id}', [AdminController::class, 'permisionAdmin'])->name('admin.permision');
 
     // Exam Routes
     Route::get('/showExams', [ExamController::class, 'showExams'])->name('showExams');
