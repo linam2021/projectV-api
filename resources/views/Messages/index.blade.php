@@ -18,8 +18,8 @@
                 <p>{{\Session::get('error')}}</p>
             </div>
             @endif
-            </div>               
-            <div class="table-responsive"> 
+            </div>
+            <div class="table-responsive">
                 @if ($messages->count() > 0)
                 <table class="table table-secondary table-striped table-bordered text-center">
                     <thead >
@@ -39,11 +39,7 @@
                             <td>{{$item->title}}</td>
                             <td>{{$item->body}}</td>
                             <td>
-                            @foreach ($admins as $admin )
-                                @if ($item->admin_id == $admin->id)
-                                    {{ $admin->last_name}}
-                                @endif
-                            @endforeach
+                                {{ $item->user->first_name.' '.$item->user->father_name. ' '.$item->user->last_name }}
                             </td>
                             <td>
                                 <div class="row">
@@ -54,7 +50,7 @@
                             </td>
                             <td>
                                 <div class="col">
-                                    <a title="حذف رسالة" class="text-danger" href="{{route('message.destroy',['id' => $item->id] )}}" > <i class="fas fa-trash-alt"></i></a>    
+                                    <a title="حذف رسالة" class="text-danger" href="{{route('message.destroy',['id' => $item->id] )}}" > <i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </td>
                         </tr>
@@ -68,8 +64,8 @@
                 @endif
             </div>
         </div>
-      </div> 
-    </div>     
+      </div>
+    </div>
   </div>
 </div>
 @stop

@@ -21,11 +21,11 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
-        'first_name', 
+        'first_name',
         'father_name',
-        'last_name', 
+        'last_name',
         'telegram',
-        'phone', 
+        'phone',
         'country',
         'gender'
     ];
@@ -76,9 +76,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Models\Message')->withTimestamps()->withPivot('read');;
     }
-    //define many to many relationship between users and notifications
-    public function notifications()
+
+    public function adminMessages()
     {
-        return $this->belongsToMany('App\Models\Notification');
+        return $this->hasMany('App\Models\Message', 'admin_id');
     }
 }

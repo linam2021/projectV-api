@@ -23,21 +23,25 @@
                     <thead>
                         <tr>
                             <th scope='col'>رقم البطل </th>
+                            <th scope='col'>اسم البطل</th>
                             <th scope='col'>تم قراءة الرسالة</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($users as $item)
                         <tr class="table-light text-center">
-                            <td> {{ $item->user_id }} </td>
-                            <td> 
-                                @if ($item->read == true)
+                            <td> {{ $item->pivot->user_id }} </td>
+                            <td>
+                                {{ $item->first_name.' '.$item->father_name. ' '.$item->last_name }}
+                            </td>
+                            <td>
+                                @if ($item->pivot->read == true)
                                     نعم
                                 @else
-                                    لا  
+                                    لا
                                 @endif
                             </td>
-    
+
                         </tr>
                         @endforeach
                     </tbody>

@@ -19,7 +19,7 @@
                 </div>
                 @endif
                 <div class="row align-items-center">
-                    <label for="pathname" class="form-label">اسم المسار</label>
+                    <label for="pathname" class="form-label" style="font-weight:bold">اسم المسار</label>
                     <div class="col-md-12 mr-2">
                         <select class="form-select" name ="path_name" aria-label="Default select example" >
                             @foreach($paths as $item)
@@ -28,22 +28,28 @@
                           </select>
                     </div>
                     <div class="col-md-12 mr-2">
-                        <label for="titel" class="form-label">عنوان الرسالة</label>
+                        <label for="category" class="form-label" style="font-weight:bold">الفئة</label>
+                        <select class="form-select" name ="category" aria-label="Default select example" >
+
+                            <option value="accepted">المقبولين</option>
+                            <option value="rejected">المرفوضين</option>
+                            <option value="succeded">الناجحين </option>
+                            <option value="excluded">الراسبين</option>
+
+                          </select>
+                    </div>
+
+                    <div class="col-md-12 mr-2">
+                        <label for="titel" class="form-label" style="font-weight:bold">عنوان الرسالة</label>
                         <input class="form-control" type="text" name="title" id="title">
                     </div>
                     <div class="col-md-12 mr-2">
-                        <label for="body" class="form-label">موضوع الرسالة</label>
+                        <label for="body" class="form-label" style="font-weight:bold">موضوع الرسالة</label>
                         <div >
                             <textarea  class="form-control" rows="10" name="body" ></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mr-2">
-                    <input style=" width:20px ; height:20px"
-                          class="form-check-input" type="checkbox" value="true"  name="sendNotification" id="sendNotification" >
-                    <label for="sendNotification" class="form-label" > ارسال اشعار </label>      
-                </div>
-
                 <div class="col-md-12 text-center my-3">
                     <button type="submit" class="btn btn-primary">إرسال</button>
                 </div>

@@ -8,24 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     use HasFactory;
-    protected $fillable=[
+    protected $fillable = [
         'title',
         'body',
         'admin_id'
     ];
 
     //define one to many relationship between users and messages tables
-    public function user(){
-        return $this->belongsTo('App\Models\User');
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'admin_id');
     }
     //define many to many relationship
     //one message can be sent to many users and vice-versa
-    public function users(){
+    public function users()
+    {
         return $this->belongsToMany('App\Models\User')->withTimestamps()->withPivot('read');
     }
 
     //define one to one relationship between messages and nbotifications tables, a message has one notification
-    public function notification(){
+    public function notification()
+    {
         return $this->hasOne('App\Models\Notification');
     }
 }
